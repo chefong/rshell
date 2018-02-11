@@ -9,7 +9,7 @@ using namespace std;
 void command::parseStrings() {
 	string arguments;
 
-	printPrompt(); // calls rshell's printPrompt()
+	rshell::printPrompt(); // calls rshell's printPrompt()
 	getline(cin, arguments); // ex. arguments = "ls -a; touch hello.cpp"
 
 	int argSize = arguments.size();
@@ -18,6 +18,7 @@ void command::parseStrings() {
 
 	char * token = strtok(cstr, " ");
 
+	// push arguments passed in separated by a space into cmds vector
 	while (token != NULL) {
 		cmds.push_back(token);
 		token = strtok(NULL, " ");
