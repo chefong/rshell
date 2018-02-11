@@ -1,8 +1,12 @@
 #ifndef BASE_H
 #define BASE_H
 
-class base {
+#include <iostream>
+using namespace std;
+
+class Base {
 	public:
+		Base(){}
 		virtual bool evaluate() = 0;
 };
 

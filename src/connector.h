@@ -8,27 +8,24 @@ class connector : public base {
 
 class andConnect : public connector {
 	private:
-		base* parent;
-		base* left;
-		base* right;
+		Base* left;
+		Base* right;
 	public:
 		bool evaluate();
 };
 
 class orConnect : public connector {
 	private:
-		base* parent;
-		base* left;
-		base* right;
+		Base* left;
+		Base* right;
 	public:
 		bool evaluate();
 };
 
 class semicol : public connector {
 	private:
-		base* parent;
-		base* left;
-		base* right;
+		Base* left;
+		Base* right;
 	public:
 		bool evaluate();
 };

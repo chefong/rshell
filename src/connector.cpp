@@ -1,4 +1,15 @@
 #include <iostream>
 #include "connector.h"
+using namespace std
+bool andConnect::evaluate(){
 
-using namespace std;
+}
+
+bool orConnect::evaluate(){
+
+}
+
+bool semicol::evaluate(){
+
+}
+
