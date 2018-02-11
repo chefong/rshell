@@ -6,6 +6,7 @@ class command: public Base {
 		vector<string> cmds;
 	public:
 		void printPrompt();
+		void read();
 };
 
 #endif
