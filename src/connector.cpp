@@ -1,15 +1,21 @@
 #include <iostream>
 #include "connector.h"
 using namespace std
-bool andConnect::evaluate(){
-
+bool andConnect::evaluate(){     //corresponds with "&&" symbol 
+	if (left->evaluate()){
+	 return right->evaluate();
+	}
+	return false;
 }
 
-bool orConnect::evaluate(){
-
+bool orConnect::evaluate(){     //corresponds with "||" symbol
+	if (!left->evaluate()){
+	 return right->evaluate();
+	}
+	return true;
 }
 
-bool semicol::evaluate(){
-
+bool semicol::evaluate(){      //corresponds with ";" symbol
+	return right->evaluate();
 }
 
