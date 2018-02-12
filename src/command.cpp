@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <stack>
+#include <queue>
 #include <cstring>
 #include "command.h"
 #include "rshell.h"
@@ -28,13 +30,18 @@ void command::parseStrings() {
 void command::execute() {
 	rshell::printPrompt(); // print "$ "
 	parseStrings(); // fill cmds vector with tokenized argument strings
+	stack<Base*> connectors;
+	queue<Base*> commands;
 
 	for (unsigned i = 0; i < cmds.size(); ++i) {
 		if (cmds.at(i) == "&&") {
-			// handle
+			connectors.push(new andConnect(cmds.at(i)));
 		}
 		else if (cmds.at(i) == "||") {
-			// handle
+			connectors.push(new orConnect(cmds.at(i)));
+		}
+		else {
+			commands.push(new command(cmds.at(i)));
 		}
 	}
 }

@@ -9,18 +9,22 @@ class connector : public base {
 
 class andConnect : public connector {
 	private:
+		string name
 		Base* left;
 		Base* right;
 	public:
+		andConnect(string name) : name(name) {}
 		bool evaluate();
 		
 };
 
 class orConnect : public connector {
 	private:
+		string name;
 		Base* left;
 		Base* right;
 	public:
+		orConnect(string name) : name(name) {}
 		bool evaluate();
 };
 
