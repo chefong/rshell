@@ -8,7 +8,7 @@ class command: public Base {
 		void parseStrings();
 		void printPrompt();
 		void read();
-		bool evaluate();
+		bool isConnector(string);
 };
 
 #endif

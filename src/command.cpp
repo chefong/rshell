@@ -8,8 +8,6 @@ using namespace std;
 
 void command::parseStrings() {
 	string arguments;
-
-	rshell::printPrompt(); // calls rshell's printPrompt()
 	getline(cin, arguments); // ex. arguments = "ls -a; touch hello.cpp"
 
 	int argSize = arguments.size();
@@ -25,4 +23,18 @@ void command::parseStrings() {
 	}
 
 	delete[] cstr;
+}
+
+void command::execute() {
+	rshell::printPrompt(); // print "$ "
+	parseStrings(); // fill cmds vector with tokenized argument strings
+
+	for (unsigned i = 0; i < cmds.size(); ++i) {
+		if (cmds.at(i) == "&&") {
+			// handle
+		}
+		else if (cmds.at(i) == "||") {
+			// handle
+		}
+	}
 }
