@@ -6,7 +6,7 @@ using namespace std;
 
 class Base {
 	public:
-		Base(){}
+		Base() {}
 		virtual bool evaluate() = 0;
 };
 

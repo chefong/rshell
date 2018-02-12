@@ -1,30 +1,27 @@
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
 #include "command.h"
+
 class connector : public Base {
 	public:
 		virtual bool evaluate() = 0;
-		//bool isConnector(string);
 };
 
 class andConnect : public connector {
 	private:
-		string name;
 		Base* left;
 		Base* right;
 	public:
-		andConnect(string name) : name(name) {}
+		andConnect() : left(0), right(0) {}
 		bool evaluate();
-		
 };
 
 class orConnect : public connector {
 	private:
-		string name;
 		Base* left;
 		Base* right;
 	public:
-		orConnect(string name) : name(name) {}
+		orConnect() : left(0), right(0) {}
 		bool evaluate();
 };
 
@@ -33,6 +30,7 @@ class semicol : public connector {
 		Base* left;
 		Base* right;
 	public:
+		semicol() : left(0), right(0) {}
 		bool evaluate();
 };
 

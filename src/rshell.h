@@ -14,8 +14,8 @@ using namespace std;
 
 class rshell {
 	public:
-		void parseStrings();
 		void execute();
+		bool isConnector(string);
 };
 
 #endif
