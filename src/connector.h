@@ -1,9 +1,10 @@
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
-
+#include "command.h"
 class connector : public base {
 	public:
 		virtual bool evaluate() = 0;
+		bool isConnector(String);
 };
 
 class andConnect : public connector {
@@ -12,6 +13,7 @@ class andConnect : public connector {
 		Base* right;
 	public:
 		bool evaluate();
+		
 };
 
 class orConnect : public connector {
