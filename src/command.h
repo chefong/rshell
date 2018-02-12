@@ -9,6 +9,7 @@ class command: public Base {
 		void printPrompt();
 		void read();
 		bool isConnector(string);
+		bool evaluate();
 };
 
 #endif
