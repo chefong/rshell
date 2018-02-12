@@ -12,8 +12,6 @@ class command: public Base {
 		vector<string> cmds;
 	public:
 		command(vector<string>);
-		void read();
-		bool isConnector(string);
 		bool evaluate();
 };
 

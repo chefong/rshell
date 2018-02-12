@@ -3,8 +3,8 @@
 #include <stack>
 #include <queue>
 #include <cstring>
+#include <vector>
 #include "command.h"
-#include "rshell.h"
 
 using namespace std;
 

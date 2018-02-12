@@ -27,7 +27,7 @@ void rshell::execute() {
 	}
 
 	// if string contains ";" at end, then remove and insert ";" in new index directly after
-	for (auto it = userArgs.begin(); it != userArgs.end(); ++it) {
+	for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
 		if (it->at(it->size() - 1) == ';') {
 			it->pop_back(); // remove appended ";"
 			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
@@ -35,20 +35,29 @@ void rshell::execute() {
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	// for (unsigned i = 0; i < userArgs.size(); ++i) {
-	// 	cout << userArgs.at(i) << endl;
-	// }
-
-	vector<string> temp;
 	for (unsigned i = 0; i < userArgs.size(); ++i) {
-		if (!isConnector(userArgs.at(i))) {
+		cout << userArgs.at(i) << endl;
+	}
+
+	vector<string> temp; // used to construct command objects
+	for (unsigned i = 0; i < userArgs.size(); ++i) {
+		if (!isConnector(userArgs.at(i))) { // if not a connector, keep pushing into temp vector
 			temp.push_back(userArgs.at(i));
 		}
 		else {
-			commands.push(new command(temp));
+			if (userArgs.at(i) == "&&") {
+				connectors.push(new andConnect());
+			}
+			else if (userArgs.at(i) == "||") {
+				connectors.push(new orConnect());
+			}
+			else {
+				connectors.push(new semicol());
+			}
 			temp.clear(); // reset temp vector
 		}
 	}
+	// at end of loop, commands and connectors stacks contain respective items
 
 	delete[] cstr;
 }
