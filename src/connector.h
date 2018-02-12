@@ -1,15 +1,15 @@
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
 #include "command.h"
-class connector : public base {
+class connector : public Base {
 	public:
 		virtual bool evaluate() = 0;
-		bool isConnector(String);
+		//bool isConnector(string);
 };
 
 class andConnect : public connector {
 	private:
-		string name
+		string name;
 		Base* left;
 		Base* right;
 	public:
