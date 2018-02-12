@@ -4,14 +4,15 @@
 #include <string>
 #include <vector>
 
-#include "base.h"
+#include "Base.h"
 
-class command: public Base {
+class Command: public Base {
 	private:
 		string name;
 		vector<string> cmds;
 	public:
-		command(vector<string>);
+		Command():Base() {};
+		Command(vector<string>);
 		bool evaluate();
 };
 

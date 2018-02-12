@@ -1,5 +1,5 @@
 #include <iostream>
-#include "connector.h"
+#include "Connector.h"
 using namespace std;
 
 bool andConnect::evaluate() {     //corresponds with "&&" symbol 

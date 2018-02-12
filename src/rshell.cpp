@@ -4,7 +4,7 @@
 #include <iterator>
 #include <stack>
 #include "rshell.h"
-#include "command.h"
+#include "Command.h"
 
 void rshell::execute() {
 	string arguments;
@@ -39,12 +39,16 @@ void rshell::execute() {
 		cout << userArgs.at(i) << endl;
 	}
 
-	vector<string> temp; // used to construct command objects
+	vector<string> temp; // used to instantiate command objects
 	for (unsigned i = 0; i < userArgs.size(); ++i) {
 		if (!isConnector(userArgs.at(i))) { // if not a connector, keep pushing into temp vector
 			temp.push_back(userArgs.at(i));
 		}
 		else {
+			// TESTING IF Command objects are correctly instantiated as they are pushed
+			
+
+			commands.push(new Command(temp)); // once a connector is reached, make a new command object and push to commands stack
 			if (userArgs.at(i) == "&&") {
 				connectors.push(new andConnect());
 			}

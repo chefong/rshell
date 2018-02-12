@@ -6,8 +6,8 @@
 #include <queue>
 #include <cstring>
 #include "rshell.h"
-#include "base.h"
-#include "connector.h"
+#include "Base.h"
+#include "Connector.h"
 using namespace std;
 
 class rshell {

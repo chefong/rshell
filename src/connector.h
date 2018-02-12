@@ -1,13 +1,13 @@
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
-#include "command.h"
+#include "Command.h"
 
-class connector : public Base {
+class Connector : public Base {
 	public:
 		virtual bool evaluate() = 0;
 };
 
-class andConnect : public connector {
+class andConnect : public Connector {
 	private:
 		Base* left;
 		Base* right;
@@ -16,7 +16,7 @@ class andConnect : public connector {
 		bool evaluate();
 };
 
-class orConnect : public connector {
+class orConnect : public Connector {
 	private:
 		Base* left;
 		Base* right;
@@ -25,7 +25,7 @@ class orConnect : public connector {
 		bool evaluate();
 };
 
-class semicol : public connector {
+class semicol : public Connector {
 	private:
 		Base* left;
 		Base* right;
