@@ -6,6 +6,8 @@ class Connector : public Base {
 	public:
 		virtual bool evaluate() = 0;
 		virtual string element() = 0;
+		virtual void setLeft(Base*) = 0;
+		virtual void setRight(Base*) = 0;
 };
 
 class andConnect : public Connector {
@@ -16,6 +18,8 @@ class andConnect : public Connector {
 		andConnect() : left(0), right(0) {};
 		bool evaluate();
 		string element();
+		void setLeft(Base*);
+		void setRight(Base*);
 };
 
 class orConnect : public Connector {
@@ -26,6 +30,8 @@ class orConnect : public Connector {
 		orConnect() : left(0), right(0) {};
 		bool evaluate();
 		string element();
+		void setLeft(Base*);
+		void setRight(Base*);
 };
 
 class semicol : public Connector {
@@ -36,6 +42,8 @@ class semicol : public Connector {
 		semicol() : left(0), right(0) {};
 		bool evaluate();
 		string element();
+		void setLeft(Base*);
+		void setRight(Base*);
 };
 
 #endif

@@ -10,7 +10,6 @@
 void rshell::execute() {
 	string arguments;
 	vector<string> userArgs;
-	// stack<Base*> commands; // used for building tree
 	stack<string> connectors; // used for building tree
 	queue<Base*> output;
 
@@ -42,7 +41,7 @@ void rshell::execute() {
 	// }
 	// cout << endl;
 
-	vector<string> temp; // used to instantiate command objects
+	vector<string> temp;
 	// SHUNTING YARD ALGORITHM??
 	for (unsigned i = 0; i < userArgs.size(); ++i) {
 		string element = userArgs.at(i);
@@ -66,7 +65,40 @@ void rshell::execute() {
 	}
 
 	// CHECK POSTFIX NOTATION (debugging purposes)
-	printBaseQueue(output);
+	// printBaseQueue(output);
+
+	//BUILD THE TREE
+	stack<Base*> tree; 
+	Base* child1 = 0;
+	Base* child2 = 0;
+	while (!output.empty()) {
+		if (isConnector(output.front()->element())) {
+			child1 = tree.top();
+			tree.pop();
+			child2 = tree.top();
+			tree.pop();
+			output.front()->setLeft(child2);
+			output.front()->setRight(child1);
+			tree.push(output.front());
+		}
+		else {
+			tree.push(output.front());
+		}
+		output.pop();
+	}
+	Base *root = tree.top();
+	// cout << root->element() << endl;
+
+	// CHECK IF TREE IS BUILT CORRECTLY
+	cout << "Preorder traversal: ";
+	printPreorder(root);
+	cout << endl;
+	cout << "Inorder traversal: ";
+	printInorder(root);
+	cout << endl;
+	cout << "Postorder traversal: ";
+	printPostorder(root);
+	cout << endl;
 
 	delete[] cstr;
 }
@@ -93,4 +125,31 @@ void rshell::printBaseQueue(queue<Base*> q) {
 		cout << q.front()->element() << endl;
 		q.pop();
 	}
+}
+
+void rshell::printPreorder(Base* current) {
+	if (current == 0) {
+		return;
+	}
+	cout << current->element() << " ";
+	printPreorder(current->getLeft());
+	printPreorder(current->getRight());
+}
+
+void rshell::printInorder(Base* current) {
+	if (current == 0) {
+		return;
+	}
+	printInorder(current->getLeft());
+	cout << current->element() << " ";
+	printInorder(current->getRight());
+}
+
+void rshell::printPostorder(Base* current) {
+	if (current == 0) {
+		return;
+	}
+	printPostorder(current->getLeft());
+	printPostorder(current->getRight());
+	cout << current->element() << " ";
 }

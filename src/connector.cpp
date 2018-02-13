@@ -10,7 +10,15 @@ bool andConnect::evaluate() {     //corresponds with "&&" symbol
 }
 
 string andConnect::element() {
-	return "&& ";
+	return "&&";
+}
+
+void andConnect::setLeft(Base* node) {
+	left = node;
+}
+
+void andConnect::setRight(Base* node) {
+	right = node;
 }
 
 bool orConnect::evaluate() {     //corresponds with "||" symbol
@@ -21,7 +29,15 @@ bool orConnect::evaluate() {     //corresponds with "||" symbol
 }
 
 string orConnect::element() {
-	return "|| ";
+	return "||";
+}
+
+void orConnect::setLeft(Base* node) {
+	left = node;
+}
+
+void orConnect::setRight(Base* node) {
+	right = node;
 }
 
 bool semicol::evaluate() {      //corresponds with ";" symbol
@@ -29,5 +45,13 @@ bool semicol::evaluate() {      //corresponds with ";" symbol
 }
 
 string semicol::element() {
-	return "; ";
+	return ";";
+}
+
+void semicol::setLeft(Base* node) {
+	left = node;
+}
+
+void semicol::setRight(Base* node) {
+	right = node;
 }

@@ -15,8 +15,12 @@ class rshell {
 		rshell() {};
 		void execute();
 		void printBaseQueue(queue<Base*>);
+		void printPreorder(Base*);
+		void printInorder(Base*);
+		void printPostorder(Base*);
 		bool isConnector(string);
 		Base* chooseConnector(string);
+		Base* buildTree();
 };
 
 #endif

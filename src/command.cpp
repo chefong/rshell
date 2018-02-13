@@ -20,8 +20,9 @@ bool Command::evaluate() {
 
 string Command::element() {
 	string total;
-	for (unsigned i = 0; i < cmds.size(); ++i) {
+	for (unsigned i = 0; i < cmds.size() - 1; ++i) {
 		total = total + cmds.at(i) + " ";
 	}
+	total = total + cmds.at(cmds.size() - 1);
 	return total;
 }
