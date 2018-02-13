@@ -8,6 +8,7 @@ class Base {
 	public:
 		Base() {}
 		virtual bool evaluate() = 0;
+		virtual string element() = 0;
 };
 
 #endif

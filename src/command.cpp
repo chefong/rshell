@@ -17,3 +17,11 @@ Command::Command(vector<string> v) {
 bool Command::evaluate() {
 	return true;
 }
+
+string Command::element() {
+	string total;
+	for (unsigned i = 0; i < cmds.size(); ++i) {
+		total = total + cmds.at(i) + " ";
+	}
+	return total;
+}

@@ -5,6 +5,7 @@
 class Connector : public Base {
 	public:
 		virtual bool evaluate() = 0;
+		virtual string element() = 0;
 };
 
 class andConnect : public Connector {
@@ -12,8 +13,9 @@ class andConnect : public Connector {
 		Base* left;
 		Base* right;
 	public:
-		andConnect() : left(0), right(0) {}
+		andConnect() : left(0), right(0) {};
 		bool evaluate();
+		string element();
 };
 
 class orConnect : public Connector {
@@ -21,8 +23,9 @@ class orConnect : public Connector {
 		Base* left;
 		Base* right;
 	public:
-		orConnect() : left(0), right(0) {}
+		orConnect() : left(0), right(0) {};
 		bool evaluate();
+		string element();
 };
 
 class semicol : public Connector {
@@ -30,8 +33,9 @@ class semicol : public Connector {
 		Base* left;
 		Base* right;
 	public:
-		semicol() : left(0), right(0) {}
+		semicol() : left(0), right(0) {};
 		bool evaluate();
+		string element();
 };
 
 #endif

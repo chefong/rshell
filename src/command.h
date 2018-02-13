@@ -14,6 +14,7 @@ class Command: public Base {
 		Command():Base() {};
 		Command(vector<string>);
 		bool evaluate();
+		string element();
 };
 
 #endif

@@ -3,14 +3,16 @@
 #include <vector>
 #include <iterator>
 #include <stack>
+#include <queue>
 #include "rshell.h"
 #include "Command.h"
 
 void rshell::execute() {
 	string arguments;
 	vector<string> userArgs;
-	stack<Base*> commands; // used for building tree
-	stack<Base*> connectors; // used for building tree
+	// stack<Base*> commands; // used for building tree
+	stack<string> connectors; // used for building tree
+	queue<Base*> output;
 
 	cout << "$ ";
 	getline(cin, arguments); // ex. arguments = "ls -a; touch hello.cpp"
@@ -20,7 +22,7 @@ void rshell::execute() {
 	strcpy(cstr, arguments.c_str()); // cstr contains the c string of arguments string
 	char * token = strtok(cstr, " ");
 
-	// push arguments passed in separated by a space into tempArgs vector
+	// push arguments passed in separated by a space into userArgs vector
 	while (token != NULL) {
 		userArgs.push_back(token);
 		token = strtok(NULL, " ");
@@ -35,33 +37,36 @@ void rshell::execute() {
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	for (unsigned i = 0; i < userArgs.size(); ++i) {
-		cout << userArgs.at(i) << endl;
-	}
+	// for (unsigned i = 0; i < userArgs.size(); ++i) {
+	// 	cout << userArgs.at(i) << endl;
+	// }
+	// cout << endl;
 
 	vector<string> temp; // used to instantiate command objects
+	// SHUNTING YARD ALGORITHM??
 	for (unsigned i = 0; i < userArgs.size(); ++i) {
-		if (!isConnector(userArgs.at(i))) { // if not a connector, keep pushing into temp vector
-			temp.push_back(userArgs.at(i));
+		string element = userArgs.at(i);
+		if (!isConnector(element)) { // if it's a command, keep pushing into temp vector
+			temp.push_back(element);
 		}
-		else {
-			// TESTING IF Command objects are correctly instantiated as they are pushed
-			
-
-			commands.push(new Command(temp)); // once a connector is reached, make a new command object and push to commands stack
-			if (userArgs.at(i) == "&&") {
-				connectors.push(new andConnect());
-			}
-			else if (userArgs.at(i) == "||") {
-				connectors.push(new orConnect());
-			}
-			else {
-				connectors.push(new semicol());
-			}
+		else { // if connector, push to stack
+			output.push(new Command(temp)); // construct new command object and push to output queue
 			temp.clear(); // reset temp vector
+
+			connectors.push(element);
 		}
 	}
-	// at end of loop, commands and connectors stacks contain respective items
+	// account for the last set of commands in userArgs
+	output.push(new Command(temp));
+	temp.clear();
+
+	while (!connectors.empty()) {
+		output.push(chooseConnector(connectors.top()));
+		connectors.pop();
+	}
+
+	// CHECK POSTFIX NOTATION (debugging purposes)
+	printBaseQueue(output);
 
 	delete[] cstr;
 }
@@ -71,4 +76,21 @@ bool rshell::isConnector(string argument) {
 		return true;
 	}
 	return false;
+}
+
+Base* rshell::chooseConnector(string symbol) {
+	if (symbol == "&&") {
+		return new andConnect();
+	}
+	else if (symbol == "||") {
+		return new orConnect();
+	}
+	return new semicol();
+}
+
+void rshell::printBaseQueue(queue<Base*> q) {
+	while (!q.empty()) {
+		cout << q.front()->element() << endl;
+		q.pop();
+	}
 }

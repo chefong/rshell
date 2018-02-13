@@ -9,6 +9,10 @@ bool andConnect::evaluate() {     //corresponds with "&&" symbol
 	return false;
 }
 
+string andConnect::element() {
+	return "&& ";
+}
+
 bool orConnect::evaluate() {     //corresponds with "||" symbol
 	if (!left->evaluate()) {
 		return right->evaluate();
@@ -16,8 +20,14 @@ bool orConnect::evaluate() {     //corresponds with "||" symbol
 	return true;
 }
 
-bool semicol::evaluate(){      //corresponds with ";" symbol
+string orConnect::element() {
+	return "|| ";
+}
+
+bool semicol::evaluate() {      //corresponds with ";" symbol
 	return right->evaluate();
 }
 
-	
+string semicol::element() {
+	return "; ";
+}

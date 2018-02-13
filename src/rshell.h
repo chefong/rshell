@@ -14,7 +14,9 @@ class rshell {
 	public:
 		rshell() {};
 		void execute();
+		void printBaseQueue(queue<Base*>);
 		bool isConnector(string);
+		Base* chooseConnector(string);
 };
 
 #endif
