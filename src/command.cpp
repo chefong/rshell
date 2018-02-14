@@ -4,7 +4,7 @@
 #include <queue>
 #include <cstring>
 #include <vector>
-#include "Command.h"
+#include "command.h"
 
 using namespace std;
 
@@ -15,6 +15,16 @@ Command::Command(vector<string> v) {
 }
 
 bool Command::evaluate() {
+	unsigned arrSize = cmds.size() + 1;
+	char * args[arrSize]; // make a char pointer array of the same size as cmds vector
+
+	// populate args array with commands in cmds vector
+	for (unsigned i = 0; i < arrSize - 1; ++i) {
+		args[i] = const_cast<char*>(cmds.at(i).c_str());
+	}
+	
+	args[arrSize - 1] = NULL; // make last index NULL
+
 	return true;
 }
 

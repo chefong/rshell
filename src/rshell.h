@@ -6,14 +6,16 @@
 #include <queue>
 #include <cstring>
 #include "rshell.h"
-#include "Base.h"
-#include "Connector.h"
+#include "base.h"
+#include "connector.h"
 using namespace std;
 
 class rshell {
 	public:
 		rshell() {};
+		void begin();
 		void execute();
+		void printStringVector(vector<string>);
 		void printBaseQueue(queue<Base*>);
 		void printPreorder(Base*);
 		void printInorder(Base*);

@@ -1,6 +1,6 @@
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
-#include "Command.h"
+#include "command.h"
 
 class Connector : public Base {
 	public:

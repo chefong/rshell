@@ -5,11 +5,19 @@
 #include <stack>
 #include <queue>
 #include "rshell.h"
-#include "Command.h"
+#include "command.h"
+
+// This will be the function that main will run
+void rshell::begin() {
+	bool status = true;
+	while (status) {
+		execute();
+	}
+}
 
 void rshell::execute() {
 	string arguments;
-	vector<string> userArgs;
+	vector<string> userArgs1;
 	stack<string> connectors; // used for building tree
 	queue<Base*> output;
 
@@ -23,28 +31,39 @@ void rshell::execute() {
 
 	// push arguments passed in separated by a space into userArgs vector
 	while (token != NULL) {
-		userArgs.push_back(token);
+		userArgs1.push_back(token);
 		token = strtok(NULL, " ");
 	}
 
+	// Ignore '#' in entered command by making copy of vector
+	vector<string> userArgs2;
+	for (unsigned i = 0; i < userArgs1.size(); ++i) {
+		if (userArgs1.at(i) == "#" || (userArgs1.at(i).find('#') != string::npos)) {
+			break;
+		}
+		else {
+			userArgs2.push_back(userArgs1.at(i));
+		}
+	}
+
+	// CHECK IF '#' IGNORED
+	// printStringVector(userArgs2);
+
 	// if string contains ";" at end, then remove and insert ";" in new index directly after
-	for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
+	for (vector<string>::iterator it = userArgs2.begin(); it != userArgs2.end(); ++it) {
 		if (it->at(it->size() - 1) == ';') {
 			it->pop_back(); // remove appended ";"
-			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
+			it = userArgs2.insert(it + 1, ";"); // insert ";" directly after
 		}
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	// for (unsigned i = 0; i < userArgs.size(); ++i) {
-	// 	cout << userArgs.at(i) << endl;
-	// }
-	// cout << endl;
+	// printStringVector(userArgs2);
 
 	vector<string> temp;
 	// SHUNTING YARD ALGORITHM??
-	for (unsigned i = 0; i < userArgs.size(); ++i) {
-		string element = userArgs.at(i);
+	for (unsigned i = 0; i < userArgs2.size(); ++i) {
+		string element = userArgs2.at(i);
 		if (!isConnector(element)) { // if it's a command, keep pushing into temp vector
 			temp.push_back(element);
 		}
@@ -55,7 +74,7 @@ void rshell::execute() {
 			connectors.push(element);
 		}
 	}
-	// account for the last set of commands in userArgs
+	// account for the last set of commands in userArgs2
 	output.push(new Command(temp));
 	temp.clear();
 
@@ -86,7 +105,7 @@ void rshell::execute() {
 		}
 		output.pop();
 	}
-	Base *root = tree.top();
+	Base *root = tree.top(); // get root of tree
 	// cout << root->element() << endl;
 
 	// CHECK IF TREE IS BUILT CORRECTLY
@@ -100,8 +119,11 @@ void rshell::execute() {
 	printPostorder(root);
 	cout << endl;
 
+	
+
 	delete[] cstr;
 }
+
 
 bool rshell::isConnector(string argument) {
 	if (argument == "&&" || argument == "||" || argument == ";") {
@@ -118,6 +140,12 @@ Base* rshell::chooseConnector(string symbol) {
 		return new orConnect();
 	}
 	return new semicol();
+}
+
+void rshell::printStringVector(vector<string> v) {
+	for (unsigned i = 0; i < v.size(); ++i) {
+		cout << v.at(i) << endl;
+	}
 }
 
 void rshell::printBaseQueue(queue<Base*> q) {
