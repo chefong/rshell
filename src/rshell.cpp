@@ -16,7 +16,7 @@ void rshell::begin() {
 }
 
 void rshell::execute() {
- while(true){
+ 
 	string arguments;
 	vector<string> userArgs1;
 	stack<string> connectors; // used for building tree
@@ -40,13 +40,16 @@ void rshell::execute() {
 	vector<string> userArgs2;
 	for (unsigned i = 0; i < userArgs1.size(); ++i) {
 		if (userArgs1.at(i) == "#" || (userArgs1.at(i).find('#') != string::npos)) {
+			userArgs2.push_back(userArgs1.at(i).substr(0, userArgs1.at(i).size()-2));
 			break;
 		}
 		else {
 			userArgs2.push_back(userArgs1.at(i));
 		}
 	}
-
+	if (userArgs2.empty()){
+		return;
+	}
 	// CHECK IF '#' IGNORED
 	// printStringVector(userArgs2);
 
@@ -127,7 +130,6 @@ void rshell::execute() {
 	// cout << endl;
 
 	delete[] cstr;
-}
 }
 
 

@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 	rshell shell;
-	shell.execute();
+	shell.begin();
 	
 	return 0;
 }
