@@ -111,7 +111,7 @@ void rshell::execute() {
 	// cout << root->getRight()->element() << endl;
 
 	if (root->evaluate()) {
-		cout << "Success" << endl;
+		//cout << "Success" << endl;
 	}
 
 	// CHECK IF TREE IS BUILT CORRECTLY
