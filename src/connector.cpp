@@ -3,6 +3,7 @@
 using namespace std;
 
 bool andConnect::evaluate() {     //corresponds with "&&" symbol 
+	// cout << "calling AND evaluate" << endl;
 	if (left->evaluate()) {
 		return right->evaluate();
 	}
@@ -22,6 +23,7 @@ void andConnect::setRight(Base* node) {
 }
 
 bool orConnect::evaluate() {     //corresponds with "||" symbol
+	// cout << "calling OR evaluate" << endl;
 	if (!left->evaluate()) {
 		return right->evaluate();
 	}
@@ -41,7 +43,8 @@ void orConnect::setRight(Base* node) {
 }
 
 bool semicol::evaluate() {      //corresponds with ";" symbol
-	cout << "ok" << endl;
+	// cout << "Calling SEMICOL evaluate" << endl;
+	cout << right->element() << endl;
 	return right->evaluate();
 }
 

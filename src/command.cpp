@@ -19,6 +19,7 @@ Command::Command(vector<string> v) {
 }
 
 bool Command::evaluate() {
+	// cout << "Running COMMAND evaluate" << endl;
 	unsigned arrSize = cmds.size() + 1;
 	char * args[arrSize]; // make a char pointer array of the same size as cmds vector
     int status = 0;
@@ -63,3 +64,6 @@ string Command::element() {
 	total = total + cmds.at(cmds.size() - 1);
 	return total;
 }
+
+void Command::setLeft(Base* node) {}
+void Command::setRight(Base* node) {}

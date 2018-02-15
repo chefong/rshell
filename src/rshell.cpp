@@ -107,6 +107,12 @@ void rshell::execute() {
 	}
 	Base *root = tree.top(); // get root of tree
 	// cout << root->element() << endl;
+	// cout << root->getLeft()->element() << endl;
+	// cout << root->getRight()->element() << endl;
+
+	if (root->evaluate()) {
+		cout << "Success" << endl;
+	}
 
 	// CHECK IF TREE IS BUILT CORRECTLY
 	// cout << "Preorder traversal: ";
@@ -118,8 +124,6 @@ void rshell::execute() {
 	// cout << "Postorder traversal: ";
 	// printPostorder(root);
 	// cout << endl;
-
-	root->evaluate();
 
 	delete[] cstr;
 }

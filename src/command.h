@@ -15,6 +15,8 @@ class Command: public Base {
 		Command(vector<string>);
 		bool evaluate();
 		string element();
+		void setLeft(Base*);
+		void setRight(Base*);
 };
 
 #endif
