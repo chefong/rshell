@@ -109,17 +109,17 @@ void rshell::execute() {
 	// cout << root->element() << endl;
 
 	// CHECK IF TREE IS BUILT CORRECTLY
-	cout << "Preorder traversal: ";
-	printPreorder(root);
-	cout << endl;
-	cout << "Inorder traversal: ";
-	printInorder(root);
-	cout << endl;
-	cout << "Postorder traversal: ";
-	printPostorder(root);
-	cout << endl;
+	// cout << "Preorder traversal: ";
+	// printPreorder(root);
+	// cout << endl;
+	// cout << "Inorder traversal: ";
+	// printInorder(root);
+	// cout << endl;
+	// cout << "Postorder traversal: ";
+	// printPostorder(root);
+	// cout << endl;
 
-	
+	root->evaluate();
 
 	delete[] cstr;
 }

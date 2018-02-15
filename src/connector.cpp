@@ -41,6 +41,7 @@ void orConnect::setRight(Base* node) {
 }
 
 bool semicol::evaluate() {      //corresponds with ";" symbol
+	cout << "ok" << endl;
 	return right->evaluate();
 }
 

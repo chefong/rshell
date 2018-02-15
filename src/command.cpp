@@ -5,6 +5,8 @@
 #include <cstring>
 #include <vector>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include "command.h"
 
@@ -19,7 +21,7 @@ Command::Command(vector<string> v) {
 bool Command::evaluate() {
 	unsigned arrSize = cmds.size() + 1;
 	char * args[arrSize]; // make a char pointer array of the same size as cmds vector
-    int* status;
+    int status = 0;
 	// populate args array with commands in cmds vector
 	for (unsigned i = 0; i < arrSize - 1; ++i) {
 		args[i] = const_cast<char*>(cmds.at(i).c_str());
@@ -41,7 +43,7 @@ bool Command::evaluate() {
 	}
 	else {
 		w = waitpid(pid, &status, 0);
-		if (w = -1){
+		if (w == -1){
 			cout << "something wrong with waitpid" << endl;
 			exit(EXIT_FAILURE);
 		}
