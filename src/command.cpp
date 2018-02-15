@@ -4,6 +4,8 @@
 #include <queue>
 #include <cstring>
 #include <vector>
+#include <unistd.h>
+#include <stdio.h>
 #include "command.h"
 
 using namespace std;
@@ -22,8 +24,23 @@ bool Command::evaluate() {
 	for (unsigned i = 0; i < arrSize - 1; ++i) {
 		args[i] = const_cast<char*>(cmds.at(i).c_str());
 	}
-	
 	args[arrSize - 1] = NULL; // make last index NULL
+
+	pid_t pid = fork();
+
+	if (pid < 0) { // if pid returns a negative value, then error
+		cout << "Forking child failed\n" << endl;
+		exit(1);
+	}
+	else if (pid == 0) {
+		if (execvp(*args, args) < 0) { // if execvp returns, then error
+			cout << "Execution failed\n" << endl;
+            exit(1);
+		}
+	}
+	else {
+		
+	}
 
 	return true;
 }
