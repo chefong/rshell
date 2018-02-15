@@ -20,6 +20,9 @@ Command::Command(vector<string> v) {
 
 bool Command::evaluate() {
 	// cout << "Running COMMAND evaluate" << endl;
+	if (cmds.at(0) == "exit"){
+		exit(0);
+	}
 	unsigned arrSize = cmds.size() + 1;
 	char * args[arrSize]; // make a char pointer array of the same size as cmds vector
     int status = 0;

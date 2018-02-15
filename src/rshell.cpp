@@ -16,6 +16,7 @@ void rshell::begin() {
 }
 
 void rshell::execute() {
+ while(true){
 	string arguments;
 	vector<string> userArgs1;
 	stack<string> connectors; // used for building tree
@@ -126,6 +127,7 @@ void rshell::execute() {
 	// cout << endl;
 
 	delete[] cstr;
+}
 }
 
 
