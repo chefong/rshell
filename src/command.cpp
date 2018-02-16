@@ -36,19 +36,19 @@ bool Command::evaluate() {
 	pid_t w;
 
 	if (pid < 0) { // if pid returns a negative value, then error
-		cout << "Forking child failed\n" << endl;
+		cout << "Forking child failed" << endl;
 		exit(1);
 	}
 	else if (pid == 0) {
 		if (execvp(*args, args) < 0) { // if execvp returns, then error
-			cout << "Execution failed\n" << endl;
+			cout << "Execution failed" << endl;
             exit(1);
 		}
 	}
 	else {
 		w = waitpid(pid, &status, 0);
 		if (w == -1){
-			cout << "something wrong with waitpid" << endl;
+			cout << "Issue with waitpid" << endl;
 			exit(EXIT_FAILURE);
 		}
 		if (WEXITSTATUS(status) == 0){
