@@ -7,6 +7,6 @@ In this assignment, please finish two things:
 2 Finish everything mentioned in "CS100_Assignment2.pdf".
 
 Run the following command:
-'''
+```
 ./bin/rshell
-'''
+```
