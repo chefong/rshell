@@ -1,4 +1,4 @@
-# assignment2
+# rshell
 
 rshell is a command shell emulator written in C++.
 The user is able to execute a single command and multiple commands (conditionally) using,
