@@ -3,6 +3,6 @@
 ls -a; echo hello && exit
 ../bin/rshell
 ls -a; # exit
-exite
+exit
 
 EOF
