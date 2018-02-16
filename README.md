@@ -10,4 +10,4 @@ To run rshell:
 ```
 ./bin/rshell
 ```
-#####Contributors: Eric Ong and Garret Lim
+##### Contributors: Eric Ong and Garret Lim
