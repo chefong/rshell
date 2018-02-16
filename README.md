@@ -2,9 +2,11 @@
 
 rshell is a command shell emulator written in C++.
 The user is able to execute a single command and multiple commands (conditionally) using,
-* ; (next command is always executed)
-* && (next command is executed ONLY IF the previous command succeeds)
-* || (next command is executed ONLY IF the previous command fails)
+* ;
+* &&
+* ||
+
+**;** means the next command is always executed. **&&** means the next command is executed ONLY IF the previous command succeeds. **||** means the next command is executed ONLY IF the previous command fails.
 
 A single command would be:
 ```
