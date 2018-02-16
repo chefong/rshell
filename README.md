@@ -1,12 +1,19 @@
 # assignment2
 
-In this assignment, please finish two things:
+rshell is a command shell emulator written in C++.
+The user is able to execute single and multiple commands. The connectors ';', '&&', and '||' are used to conditionally execute more than one command.
 
-1 In "CS100_Assignment1.pdf", finish setting up your “Assignment” github repo, and writing an epic for assignment 2.
+A single command would be:
+```
+ls -a
+```
 
-2 Finish everything mentioned in "CS100_Assignment2.pdf".
+Multiple commands would be:
+```
+ls -a; echo hello world && rm hello.h
+```
 
-To run rshell:
+To run rshell, execute the following command:
 ```
 ./bin/rshell
 ```
