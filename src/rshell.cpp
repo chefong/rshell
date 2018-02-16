@@ -29,9 +29,10 @@ void rshell::execute() {
 		arguments = arguments.substr(0, arguments.find('#'));
 		// cout << arguments << endl;
 	}
-	if (arguments.empty()) {
+	if (arguments.empty()) { // if string empty, do nothing
 		return;
 	}
+
 
 	int argSize = arguments.size();
 	char * cstr = new char[argSize + 1];
@@ -50,6 +51,9 @@ void rshell::execute() {
 			it->pop_back(); // remove appended ";"
 			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
 		}
+	}
+	if (isConnector(userArgs.at(userArgs.size() - 1))) {
+		userArgs.pop_back(); // ls; -> ls
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
