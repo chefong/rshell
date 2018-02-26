@@ -137,6 +137,14 @@ void rshell::execute() {
 				temp.clear(); // reset temp vector
 			}
 
+			if (!connectors.empty()) {
+				while ( !connectors.empty() && !isLeftBracket(connectors.top())) {
+					cout << "Checking special" << endl;
+					output.push(chooseConnector(connectors.top()));
+					connectors.pop();
+				}
+			}
+
 			connectors.push(element);
 		}
 		else if (isLeftBracket(element)) {
