@@ -1,4 +1,4 @@
-#include <iostream>
+	#include <iostream>
 #include <string>
 #include <vector>
 #include <iterator>
@@ -135,6 +135,12 @@ void rshell::execute() {
 				cout << "Element is a connector (making new command object and pushing onto output queue)" << endl;
 				output.push(new Command(temp)); // construct new command object and push to output queue
 				temp.clear(); // reset temp vector
+			}
+			if (!connectors.empty()){
+				while (!connectors.empty() && !isLeftBracket(connectors.top())){
+					output.push(chooseConnector(connectors.top()));
+					connectors.pop();
+				}
 			}
 
 			connectors.push(element);
