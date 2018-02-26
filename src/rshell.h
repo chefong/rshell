@@ -21,6 +21,9 @@ class rshell {
 		void printInorder(Base*);
 		void printPostorder(Base*);
 		bool isConnector(string);
+		bool isBalanced(vector<string>);
+		bool isLeftBracket(string);
+		bool isRightBracket(string);
 		Base* chooseConnector(string);
 		Base* buildTree();
 };

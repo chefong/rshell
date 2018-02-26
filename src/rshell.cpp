@@ -45,45 +45,140 @@ void rshell::execute() {
 		token = strtok(NULL, " ");
 	}
 
+	// printStringVector(userArgs);
+
 	// if string contains ";" at end, then remove and insert ";" in new index directly after
 	for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
+		cout << "Current word is " << *it << endl;
+		if (*it == "(") {
+			cout << "1" << endl;
+			continue;
+		}
 		if (it->at(it->size() - 1) == ';') {
+			cout << "2" << endl;
 			it->pop_back(); // remove appended ";"
 			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
 		}
+		if (it->at(it->size() - 1) == ')') {
+			cout << "3" << endl;
+			if (*it == ")") {
+				// cout << "continuing" << endl;
+				continue;
+			}
+			// it->pop_back(); // remove appended ";"
+			// it = userArgs.insert(it + 1, ")"); // insert ";" directly after
+			string sub = it->substr(1, it->size() - 1);
+			*it = it->at(0);
+			cout << "Index now contains " << *it << endl;
+			it = userArgs.insert(it + 1, sub) - 1;
+		}
+		if (it->at(0) == '(') {
+			cout << "4" << endl;
+			// remove the '(' and insert it in vector index right before
+			string sub = it->substr(1, it->size() - 1);
+			*it = "(";
+			it = userArgs.insert(it + 1, sub) - 1;
+		}
+		// string word = *it;
+		// for (unsigned i = 0; i < word.size(); ++i) {
+		// 	if (word.at(i) == '(') {
+		// 		string sub = word.substr(1, word.size() - 1);
+		// 		*it = "(";
+		// 		it = userArgs.insert(it + 1, sub);
+		// 	}
+		// }
 	}
+	// cout << "Here" << endl;
+	// for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
+	// 	cout << *it << endl;
+	// 	if (it->at(it->size() - 1) == ')') {
+	// 		cout << "Doing something" << endl;
+	// 		it->pop_back(); // remove appended ")"
+	// 		it = userArgs.insert(it + 1, ")"); // insert ")" directly after
+	// 	}
+	// }
+	// for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
+	// 	if (*it == "(") {
+	// 		break;
+	// 	}
+	// 	else if (it->at(0) == '(') {
+	// 		// remove the '(' and insert it in vector index right before
+	// 		string sub = it->substr(1, it->size() - 1);
+	// 		*it = "(";
+	// 		it = userArgs.insert(it + 1, sub);
+	// 	}
+	// }
 	if (isConnector(userArgs.at(userArgs.size() - 1))) {
 		userArgs.pop_back(); // ls; -> ls
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	// printStringVector(userArgs);
+	printStringVector(userArgs);
+
+	if (!isBalanced(userArgs)) {
+		cout << "Parantheses not balanced" << endl;
+		return;
+	}
+	cout << "Expression is balanced" << endl;
 
 	vector<string> temp;
 	// SHUNTING YARD ALGORITHM??
 	for (unsigned i = 0; i < userArgs.size(); ++i) {
 		string element = userArgs.at(i);
-		if (!isConnector(element)) { // if it's a command, keep pushing into temp vector
+		cout << "Current element is '" << element << "'" << endl;
+		if (!isConnector(element) && !isLeftBracket(element) && !isRightBracket(element)) { // if it's a command, keep pushing into temp vector
+			cout << "Pushing back '" << element << "' into temp vector" << endl;
 			temp.push_back(element);
 		}
-		else { // if connector, push to stack
-			output.push(new Command(temp)); // construct new command object and push to output queue
-			temp.clear(); // reset temp vector
+		else if (isConnector(element)) { // if connector, push to stack
+			if (!temp.empty()) {
+				cout << "Element is a connector (making new command object and pushing onto output queue)" << endl;
+				output.push(new Command(temp)); // construct new command object and push to output queue
+				temp.clear(); // reset temp vector
+			}
 
 			connectors.push(element);
 		}
+		else if (isLeftBracket(element)) {
+			cout << "Pushing '(' onto connectors stack" << endl;
+			connectors.push(element);
+		}
+		else { // element is a right bracket
+			cout << "Element is a ')' (making new command object and pushing onto output queue)" << endl;
+			if (!temp.empty()) {
+				output.push(new Command(temp));
+				temp.clear();
+			}
+
+			while (!isLeftBracket(connectors.top())) {
+				cout << "Pushing " << connectors.top() << " onto output queue" << endl;
+				output.push(chooseConnector(connectors.top()));
+				connectors.pop();
+			}
+			connectors.pop(); // pop the left bracket and discard it
+		}
+		cout << endl;
 	}
-	// account for the last set of commands in userArgs2
-	output.push(new Command(temp));
-	temp.clear();
+
+	// cout << "Printing queue before last commands" << endl;
+ // 	printBaseQueue(output);
+
+	// account for the last set of commands in userArgs
+	if (!isRightBracket(userArgs.at(userArgs.size() - 1))) {
+		cout << "Making and pushing last command onto output queue" << endl;
+		output.push(new Command(temp));
+		temp.clear();
+	}
 
 	while (!connectors.empty()) {
+		// cout << "Pushing " << connectors.top() << "onto output queue" << endl;
 		output.push(chooseConnector(connectors.top()));
 		connectors.pop();
 	}
 
 	// CHECK POSTFIX NOTATION (debugging purposes)
-	// printBaseQueue(output);
+	printBaseQueue(output);
+	cout << endl;
 
 	//BUILD THE TREE
 	stack<Base*> tree; 
@@ -100,6 +195,7 @@ void rshell::execute() {
 			tree.push(output.front());
 		}
 		else {
+			cout << "Pushing " << output.front()->element() << " to tree stack" << endl;
 			tree.push(output.front());
 		}
 		output.pop();
@@ -127,9 +223,53 @@ void rshell::execute() {
 	delete[] cstr;
 }
 
+bool rshell::isBalanced(vector<string> v) {
+	stack<string> par;
+
+	for (unsigned i = 0; i < v.size(); ++i) {
+		// cout << "Current item is " << v.at(i) << endl;
+		if (isLeftBracket(v.at(i))) {
+			// cout << "Pushing to stack" << endl;
+			par.push(v.at(i));
+		}
+		else if (isRightBracket(v.at(i))) {
+			if (par.empty()) {
+				return false;
+			}
+			else {
+				string temp = par.top();
+				par.pop();
+
+				if (isLeftBracket(temp)) {
+					continue;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+	}
+
+	return par.empty();
+}
 
 bool rshell::isConnector(string argument) {
 	if (argument == "&&" || argument == "||" || argument == ";") {
+		return true;
+	}
+	return false;
+}
+
+bool rshell::isLeftBracket(string argument) {
+	if (argument == "(") {
+		// cout << "Element is left bracket" << endl;
+		return true;
+	}
+	return false;
+}
+
+bool rshell::isRightBracket(string argument) {
+	if (argument == ")") {
 		return true;
 	}
 	return false;
@@ -155,7 +295,9 @@ void rshell::printBaseQueue(queue<Base*> q) {
 	while (!q.empty()) {
 		cout << q.front()->element() << endl;
 		q.pop();
+		// cout << "Printed element" << endl;
 	}
+	// cout << "Done printing queue" << endl;
 }
 
 void rshell::printPreorder(Base* current) {
