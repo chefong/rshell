@@ -73,13 +73,13 @@ void rshell::execute() {
 			it = userArgs.insert(it + 1, sub) - 1;
 		}
 		
-		// if (it->at(0) == '(') {
-		// 	cout << "4" << endl;
-		// 	// remove the '(' and insert it in vector index right before
-		// 	string sub = it->substr(1, it->size() - 1);
-		// 	*it = "(";
-		// 	it = userArgs.insert(it + 1, sub) - 1;
-		// }
+		if (it->at(0) == '(') {
+			cout << "4" << endl;
+			// remove the '(' and insert it in vector index right before
+			string sub = it->substr(1, it->size() - 1);
+			*it = "(";
+			it = userArgs.insert(it + 1, sub) - 1;
+		}
 		// if (*it == "[") {
 		// 	cout << "1" << endl;
 		// 	continue;

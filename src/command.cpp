@@ -39,7 +39,7 @@ bool Command::evaluate() {
 					struct stat info;
 					//check if file/directory is accessible
 					if(stat(const_cast<char*>(cmds.at(2).c_str()), &info) != 0){
-						cout << "cannot access %s\n " << cmds.at(2) << endl;
+						cout << "cannot access " << cmds.at(2) << endl;
 						cout << "(False)" << endl;
 						return false;
 					}
@@ -78,6 +78,18 @@ bool Command::evaluate() {
 					else{
 						cout << "(False)" << endl;
 						return false;
+					}
+		}
+		else{
+					struct stat info;
+					if(stat(const_cast<char*>(cmds.at(1).c_str()), &info) != 0){
+						cout << "cannot access " << cmds.at(1) << endl;
+						cout << "(False)" << endl;
+						return false;
+					}
+					else{
+						cout << "(True)" << endl;
+						return true;
 					}
 		}
 		
