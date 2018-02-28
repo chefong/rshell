@@ -45,7 +45,7 @@ void rshell::execute() {
 		token = strtok(NULL, " ");
 	}
 
-	// printStringVector(userArgs);
+	 //printStringVector(userArgs);
 
 	// if string contains ";" at end, then remove and insert ";" in new index directly after
 	for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
@@ -72,13 +72,40 @@ void rshell::execute() {
 			cout << "Index now contains " << *it << endl;
 			it = userArgs.insert(it + 1, sub) - 1;
 		}
-		if (it->at(0) == '(') {
-			cout << "4" << endl;
-			// remove the '(' and insert it in vector index right before
-			string sub = it->substr(1, it->size() - 1);
-			*it = "(";
-			it = userArgs.insert(it + 1, sub) - 1;
-		}
+		
+		// if (it->at(0) == '(') {
+		// 	cout << "4" << endl;
+		// 	// remove the '(' and insert it in vector index right before
+		// 	string sub = it->substr(1, it->size() - 1);
+		// 	*it = "(";
+		// 	it = userArgs.insert(it + 1, sub) - 1;
+		// }
+		// if (*it == "[") {
+		// 	cout << "1" << endl;
+		// 	continue;
+		// }
+		// if (it->at(it->size() - 1) == ']') {
+		// 	cout << "3" << endl;
+		// 	if (*it == "]") {
+		// 		// cout << "continuing" << endl;
+		// 		continue;
+		// 	}
+		// 	// it->pop_back(); // remove appended ";"
+		// 	// it = userArgs.insert(it + 1, ")"); // insert ";" directly after
+		// 	string sub = it->substr(1, it->size() - 1);
+		// 	*it = it->at(0);
+		// 	cout << "Index now contains " << *it << endl;
+		// 	it = userArgs.insert(it + 1, sub) - 1;
+		// }
+		// if (it->at(0) == '[') {
+		// 	cout << "4" << endl;
+		// 	// remove the '(' and insert it in vector index right before
+		// 	string sub = it->substr(1, it->size() - 1);
+		// 	*it = "[";
+		// 	it = userArgs.insert(it + 1, sub) - 1;
+		// }
+
+
 		// string word = *it;
 		// for (unsigned i = 0; i < word.size(); ++i) {
 		// 	if (word.at(i) == '(') {
