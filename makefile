@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -w
 CC_FLAGS = -Wall -pedantic -std=c++11
 
 EXECUTABLE = rshell

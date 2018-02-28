@@ -6,9 +6,11 @@
 #include <vector>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 #include <stdio.h>
 #include "command.h"
+#include "fstream" 
 
 using namespace std;
 
@@ -23,6 +25,64 @@ bool Command::evaluate() {
 	if (cmds.at(0) == "exit"){
 		exit(0);
 	}
+	//check if its a test command
+	if (cmds.at(0) == "test" || cmds.at(0) == "["){
+		if (cmds.at(0) == "["){
+			//check if brackets are valid
+			if (cmds.at(cmds.size()-1) != "]"){
+				cout << "invalid bracket" << endl;
+				return false;
+			}
+		}
+		//the different test commands
+		if (cmds.at(1) == "-e"){
+					struct stat info;
+					//check if file/directory is accessible
+					if(stat(const_cast<char*>(cmds.at(2).c_str()), &info) != 0){
+						cout << "cannot access %s\n " << cmds.at(2) << endl;
+						cout << "(False)" << endl;
+						return false;
+					}
+					else{
+						cout << "(True)" << endl;
+						return true;
+					}
+			}
+		else if (cmds.at(1) == "-f"){
+					struct stat info;
+					if(stat(const_cast<char*>(cmds.at(2).c_str()), &info) != 0){
+						cout << "cannot access %s\n " << cmds.at(2) << endl;
+						cout << "(False)" << endl;
+						return false;
+					}
+					else if (info.st_mode & S_IFREG){
+						cout << "(True)" << endl;
+						return true;
+					}
+					else{
+						cout << "(False)" << endl;
+						return false;
+					}
+		}
+		else if (cmds.at(1) == "-d"){
+					struct stat info;
+					if(stat(const_cast<char*>(cmds.at(2).c_str()), &info) != 0){
+						cout << "cannot access %s\n " << cmds.at(2) << endl;
+						cout << "(False)" << endl;
+						return false;
+					}
+					else if (info.st_mode & S_IFDIR){
+						cout << "(True)" << endl;
+						return true;
+					}
+					else{
+						cout << "(False)" << endl;
+						return false;
+					}
+		}
+		
+	}
+	else{
 	unsigned arrSize = cmds.size() + 1;
 	char * args[arrSize]; // make a char pointer array of the same size as cmds vector
     int status = 0;
@@ -55,9 +115,11 @@ bool Command::evaluate() {
 			return true;
 		}
 	}
+}
 
 	return false;
 }
+
 
 string Command::element() {
 	string total;
