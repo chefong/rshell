@@ -45,22 +45,22 @@ void rshell::execute() {
 		token = strtok(NULL, " ");
 	}
 
-	printStringVector(userArgs);
+	// printStringVector(userArgs);
 
 	// if string contains ";" at end, then remove and insert ";" in new index directly after
 	for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
-		cout << "Current word is " << *it << endl;
+		// cout << "Current word is " << *it << endl;
 		if (*it == "(" || *it == ")") {
-			cout << "1" << endl;
+			// cout << "1" << endl;
 			continue;
 		}
 		else if (it->at(it->size() - 1) == ';') {
-			cout << "2" << endl;
+			// cout << "2" << endl;
 			it->pop_back(); // remove appended ";"
 			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
 		}
 		else if (it->at(it->size() - 1) == ')') {
-			cout << "3" << endl;
+			// cout << "3" << endl;
 			// if (*it == ")") {
 			// 	// cout << "continuing" << endl;
 			// 	continue;
@@ -73,7 +73,7 @@ void rshell::execute() {
 			it = userArgs.insert(it + 1, ")") - 1;
 		}
 		else if (it->at(0) == '(') {
-			cout << "4" << endl;
+			// cout << "4" << endl;
 			// remove the '(' and insert it in vector index right before
 			string sub = it->substr(1, it->size() - 1);
 			*it = "(";
@@ -113,33 +113,33 @@ void rshell::execute() {
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	printStringVector(userArgs);
+	// printStringVector(userArgs);
 
 	if (!isBalanced(userArgs)) {
 		cout << "Parantheses not balanced" << endl;
 		return;
 	}
-	cout << "Expression is balanced" << endl;
+	// cout << "Expression is balanced" << endl;
 
 	vector<string> temp;
 	// SHUNTING YARD ALGORITHM??
 	for (unsigned i = 0; i < userArgs.size(); ++i) {
 		string element = userArgs.at(i);
-		cout << "Current element is '" << element << "'" << endl;
+		// cout << "Current element is '" << element << "'" << endl;
 		if (!isConnector(element) && !isLeftBracket(element) && !isRightBracket(element)) { // if it's a command, keep pushing into temp vector
-			cout << "Pushing back '" << element << "' into temp vector" << endl;
+			// cout << "Pushing back '" << element << "' into temp vector" << endl;
 			temp.push_back(element);
 		}
 		else if (isConnector(element)) { // if connector, push to stack
 			if (!temp.empty()) {
-				cout << "Element is a connector (making new command object and pushing onto output queue)" << endl;
+				// cout << "Element is a connector (making new command object and pushing onto output queue)" << endl;
 				output.push(new Command(temp)); // construct new command object and push to output queue
 				temp.clear(); // reset temp vector
 			}
 
 			if (!connectors.empty()) {
 				while ( !connectors.empty() && !isLeftBracket(connectors.top())) {
-					cout << "Checking special" << endl;
+					// cout << "Checking special" << endl;
 					output.push(chooseConnector(connectors.top()));
 					connectors.pop();
 				}
@@ -148,24 +148,24 @@ void rshell::execute() {
 			connectors.push(element);
 		}
 		else if (isLeftBracket(element)) {
-			cout << "Pushing '(' onto connectors stack" << endl;
+			// cout << "Pushing '(' onto connectors stack" << endl;
 			connectors.push(element);
 		}
 		else { // element is a right bracket
-			cout << "Element is a ')' (making new command object and pushing onto output queue)" << endl;
+			// cout << "Element is a ')' (making new command object and pushing onto output queue)" << endl;
 			if (!temp.empty()) {
 				output.push(new Command(temp));
 				temp.clear();
 			}
 
 			while (!isLeftBracket(connectors.top())) {
-				cout << "Pushing " << connectors.top() << " onto output queue" << endl;
+				// cout << "Pushing " << connectors.top() << " onto output queue" << endl;
 				output.push(chooseConnector(connectors.top()));
 				connectors.pop();
 			}
 			connectors.pop(); // pop the left bracket and discard it
 		}
-		cout << endl;
+		// cout << endl;
 	}
 
 	// cout << "Printing queue before last commands" << endl;
@@ -173,7 +173,7 @@ void rshell::execute() {
 
 	// account for the last set of commands in userArgs
 	if (!isRightBracket(userArgs.at(userArgs.size() - 1))) {
-		cout << "Making and pushing last command onto output queue" << endl;
+		// cout << "Making and pushing last command onto output queue" << endl;
 		output.push(new Command(temp));
 		temp.clear();
 	}
@@ -185,8 +185,8 @@ void rshell::execute() {
 	}
 
 	// CHECK POSTFIX NOTATION (debugging purposes)
-	printBaseQueue(output);
-	cout << endl;
+	// printBaseQueue(output);
+	// cout << endl;
 
 	//BUILD THE TREE
 	stack<Base*> tree; 
@@ -203,7 +203,7 @@ void rshell::execute() {
 			tree.push(output.front());
 		}
 		else {
-			cout << "Pushing " << output.front()->element() << " to tree stack" << endl;
+			// cout << "Pushing " << output.front()->element() << " to tree stack" << endl;
 			tree.push(output.front());
 		}
 		output.pop();
