@@ -50,7 +50,7 @@ void rshell::execute() {
 	// if string contains ";" at end, then remove and insert ";" in new index directly after
 	for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
 		// cout << "Current word is " << *it << endl;
-		if (*it == "(" || *it == ")") {
+		if (*it == "(" || *it == ")" || *it == "[" || *it == "]") {
 			// cout << "1" << endl;
 			continue;
 		}
@@ -69,7 +69,7 @@ void rshell::execute() {
 			// it = userArgs.insert(it + 1, ")"); // insert ";" directly after
 			// string sub = it->substr(0, it->size() - 1);
 			*it = it->substr(0, it->size() - 1);
-			cout << "Index now contains " << *it << endl;
+			// cout << "Index now contains " << *it << endl;
 			it = userArgs.insert(it + 1, ")") - 1;
 		}
 		else if (it->at(0) == '(') {
@@ -77,6 +77,26 @@ void rshell::execute() {
 			// remove the '(' and insert it in vector index right before
 			string sub = it->substr(1, it->size() - 1);
 			*it = "(";
+			it = userArgs.insert(it + 1, sub) - 1;
+		}
+		else if (it->at(it->size() - 1) == ']') {
+			// cout << "5" << endl;
+			// if (*it == "]") {
+			// 	// cout << "continuing" << endl;
+			// 	continue;
+			// }
+			// it->pop_back(); // remove appended ";"
+			// it = userArgs.insert(it + 1, ")"); // insert ";" directly after
+			// string sub = it->substr(0, it->size() - 1);
+			*it = it->substr(0, it->size() - 1);
+			// cout << "Index now contains " << *it << endl;
+			it = userArgs.insert(it + 1, "]") - 1;
+		}
+		else if (it->at(0) == '[') {
+			// cout << "6" << endl;
+			// remove the '(' and insert it in vector index right before
+			string sub = it->substr(1, it->size() - 1);
+			*it = "[";
 			it = userArgs.insert(it + 1, sub) - 1;
 		}
 		// string word = *it;
@@ -213,6 +233,7 @@ void rshell::execute() {
 	// cout << root->getLeft()->element() << endl;
 	// cout << root->getRight()->element() << endl;
 
+	// cout << endl;
 	if (root->evaluate()) {
 		//cout << "Success" << endl;
 	}
