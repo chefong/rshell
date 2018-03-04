@@ -24,13 +24,13 @@ To run rshell, execute the following command:
 ```
 
 Aside from normal commands, the user is able to use the precedence operators '(' and ')'
-```
+```c++
 echo a && echo b || echo c && echo d #prints 'a', 'b', and 'd'
 (echo a && echo b) || (echo c && echo d) #prints ONLY 'a' and 'b'
 ```
 
 Test commands (in the form of "test" or "[ ]") allow the user to check if a file/directory exists in the current directory. 
-```
+```c++
 # -e checks if the file/directory exists
 # -f checks if the file/directory exists and is a regular file
 # -d checks if the file/directory exists and is a directory
