@@ -3,7 +3,7 @@
 #
 ###
 #ls -a
-ls -a; # echo hello
+ls -a; # [-e src]
 exit
 
 EOF

@@ -46,6 +46,7 @@ void rshell::execute() {
 	}
 
 	// printStringVector(userArgs);
+	// cout << endl;
 
 	// if string contains ";" at end, then remove and insert ";" in new index directly after
 	for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
@@ -59,7 +60,7 @@ void rshell::execute() {
 			it->pop_back(); // remove appended ";"
 			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
 		}
-		else if (it->at(it->size() - 1) == ')') {
+		else if (it->find(")") != string::npos) {
 			// cout << "3" << endl;
 			// if (*it == ")") {
 			// 	// cout << "continuing" << endl;
@@ -68,9 +69,20 @@ void rshell::execute() {
 			// it->pop_back(); // remove appended ";"
 			// it = userArgs.insert(it + 1, ")"); // insert ";" directly after
 			// string sub = it->substr(0, it->size() - 1);
-			*it = it->substr(0, it->size() - 1);
+			int count = 0;
+			for (unsigned i = 0; i < it->size(); ++i) { // count how many ')' there are
+				if (it->at(i) == ')') {
+					++count;
+				}
+			}
+
+			*it = it->substr(0, it->find(")")); // substring until the first instance of ')'
+			
+			for (unsigned i = 0; i < count; ++i) {
+				it = userArgs.insert(it + 1, ")");
+			}
 			// cout << "Index now contains " << *it << endl;
-			it = userArgs.insert(it + 1, ")") - 1;
+			// it = userArgs.insert(it + 1, ")") - 1;
 		}
 		else if (it->at(0) == '(') {
 			// cout << "4" << endl;
@@ -132,8 +144,9 @@ void rshell::execute() {
 		userArgs.pop_back(); // ls; -> ls
 	}
 
-	// CHECK IF VECTOR MODIFIED CORRECTLY
+	// // CHECK IF VECTOR MODIFIED CORRECTLY
 	// printStringVector(userArgs);
+	// cout << endl;
 
 	if (!isBalanced(userArgs)) {
 		cout << "Parantheses not balanced" << endl;
