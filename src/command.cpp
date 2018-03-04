@@ -30,7 +30,7 @@ bool Command::evaluate() {
 		if (cmds.at(0) == "["){
 			//check if brackets are valid
 			if (cmds.at(cmds.size()-1) != "]"){
-				cout << "invalid bracket" << endl;
+				cout << "Invalid brackets" << endl;
 				return false;
 			}
 		}
@@ -39,7 +39,7 @@ bool Command::evaluate() {
 					struct stat info;
 					//check if file/directory is accessible
 					if(stat(const_cast<char*>(cmds.at(2).c_str()), &info) != 0){
-						cout << "cannot access " << cmds.at(2) << endl;
+						cout << "Cannot access " << cmds.at(2) << endl;
 						cout << "(False)" << endl;
 						return false;
 					}
@@ -51,7 +51,7 @@ bool Command::evaluate() {
 		else if (cmds.at(1) == "-f"){
 					struct stat info;
 					if(stat(const_cast<char*>(cmds.at(2).c_str()), &info) != 0){
-						cout << "cannot access %s\n " << cmds.at(2) << endl;
+						cout << "Cannot access " << cmds.at(2) << endl;
 						cout << "(False)" << endl;
 						return false;
 					}
@@ -67,7 +67,7 @@ bool Command::evaluate() {
 		else if (cmds.at(1) == "-d"){
 					struct stat info;
 					if(stat(const_cast<char*>(cmds.at(2).c_str()), &info) != 0){
-						cout << "cannot access %s\n " << cmds.at(2) << endl;
+						cout << "Cannot access " << cmds.at(2) << endl;
 						cout << "(False)" << endl;
 						return false;
 					}
@@ -108,12 +108,12 @@ bool Command::evaluate() {
 	pid_t w;
 
 	if (pid < 0) { // if pid returns a negative value, then error
-		cout << "Forking child failed" << endl;
+		cout << "*** ERROR: forking child process failed\n" << endl;
 		exit(1);
 	}
 	else if (pid == 0) {
 		if (execvp(*args, args) < 0) { // if execvp returns, then error
-			cout << "Execution failed" << endl;
+			cout << "*** ERROR: exec failed\n" << endl;
             exit(1);
 		}
 	}
