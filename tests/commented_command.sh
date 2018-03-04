@@ -3,7 +3,7 @@
 #
 ###
 #ls -a
-ls -a; # [-e src]
+ls -a; # [ -e src ]
 exit
 
 EOF

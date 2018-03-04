@@ -66,8 +66,15 @@ void rshell::execute() {
 			it->pop_back(); // remove appended ";"
 			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
 		}
-		else if (it->find(")") != string::npos) {
+		else if (it->at(0) == '(') {
 			// cout << "3" << endl;
+			// remove the '(' and insert it in vector index right before
+			string sub = it->substr(1, it->size() - 1);
+			*it = "(";
+			it = userArgs.insert(it + 1, sub) - 1;
+		}
+		else if (it->find(")") != string::npos) {
+			// cout << "4" << endl;
 			// if (*it == ")") {
 			// 	// cout << "continuing" << endl;
 			// 	continue;
@@ -90,15 +97,15 @@ void rshell::execute() {
 			// cout << "Index now contains " << *it << endl;
 			// it = userArgs.insert(it + 1, ")") - 1;
 		}
-		else if (it->at(0) == '(') {
-			// cout << "4" << endl;
+		else if (it->at(0) == '[') {
+			// cout << "5" << endl;
 			// remove the '(' and insert it in vector index right before
 			string sub = it->substr(1, it->size() - 1);
-			*it = "(";
+			*it = "[";
 			it = userArgs.insert(it + 1, sub) - 1;
 		}
 		else if (it->at(it->size() - 1) == ']') {
-			// cout << "5" << endl;
+			// cout << "6" << endl;
 			// if (*it == "]") {
 			// 	// cout << "continuing" << endl;
 			// 	continue;
@@ -109,13 +116,6 @@ void rshell::execute() {
 			*it = it->substr(0, it->size() - 1);
 			// cout << "Index now contains " << *it << endl;
 			it = userArgs.insert(it + 1, "]") - 1;
-		}
-		else if (it->at(0) == '[') {
-			// cout << "6" << endl;
-			// remove the '(' and insert it in vector index right before
-			string sub = it->substr(1, it->size() - 1);
-			*it = "[";
-			it = userArgs.insert(it + 1, sub) - 1;
 		}
 		// string word = *it;
 		// for (unsigned i = 0; i < word.size(); ++i) {
