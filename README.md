@@ -35,7 +35,7 @@ Test commands (in the form of "test" or "[ ]") allow the user to check if a file
 # -f checks if the file/directory exists and is a regular file
 # -d checks if the file/directory exists and is a directory
 
-test -e src #prints "(True)" if "src" exists in the current directory"
+test -e src #prints "(True)" if "src" exists in the current directory
 
 # or equivalently
 [ -e src ]
