@@ -61,27 +61,19 @@ void rshell::execute() {
 			// cout << "1" << endl;
 			continue;
 		}
-		else if (it->at(it->size() - 1) == ';') {
+		else if (it->at(it->size() - 1) == ';') { // remove the ';' and insert it in vector index right after
 			// cout << "2" << endl;
-			it->pop_back(); // remove appended ";"
-			it = userArgs.insert(it + 1, ";"); // insert ";" directly after
+			it->pop_back();
+			it = userArgs.insert(it + 1, ";");
 		}
-		else if (it->at(0) == '(') {
+		else if (it->at(0) == '(') { // remove the '(' and insert it in vector index right before
 			// cout << "3" << endl;
-			// remove the '(' and insert it in vector index right before
 			string sub = it->substr(1, it->size() - 1);
 			*it = "(";
 			it = userArgs.insert(it + 1, sub) - 1;
 		}
 		else if (it->find(")") != string::npos) {
 			// cout << "4" << endl;
-			// if (*it == ")") {
-			// 	// cout << "continuing" << endl;
-			// 	continue;
-			// }
-			// it->pop_back(); // remove appended ";"
-			// it = userArgs.insert(it + 1, ")"); // insert ";" directly after
-			// string sub = it->substr(0, it->size() - 1);
 			int count = 0;
 			for (unsigned i = 0; i < it->size(); ++i) { // count how many ')' there are
 				if (it->at(i) == ')') {
@@ -90,64 +82,29 @@ void rshell::execute() {
 			}
 
 			*it = it->substr(0, it->find(")")); // substring until the first instance of ')'
-			
 			for (unsigned i = 0; i < count; ++i) {
 				it = userArgs.insert(it + 1, ")");
 			}
 			// cout << "Index now contains " << *it << endl;
 			// it = userArgs.insert(it + 1, ")") - 1;
 		}
-		else if (it->at(0) == '[') {
+		else if (it->at(0) == '[') { // remove the '[' and insert it in vector index right before
 			// cout << "5" << endl;
-			// remove the '(' and insert it in vector index right before
 			string sub = it->substr(1, it->size() - 1);
 			*it = "[";
 			it = userArgs.insert(it + 1, sub) - 1;
 		}
 		else if (it->at(it->size() - 1) == ']') {
 			// cout << "6" << endl;
-			// if (*it == "]") {
-			// 	// cout << "continuing" << endl;
-			// 	continue;
-			// }
-			// it->pop_back(); // remove appended ";"
-			// it = userArgs.insert(it + 1, ")"); // insert ";" directly after
-			// string sub = it->substr(0, it->size() - 1);
 			*it = it->substr(0, it->size() - 1);
 			// cout << "Index now contains " << *it << endl;
 			it = userArgs.insert(it + 1, "]") - 1;
 		}
-		// string word = *it;
-		// for (unsigned i = 0; i < word.size(); ++i) {
-		// 	if (word.at(i) == '(') {
-		// 		string sub = word.substr(1, word.size() - 1);
-		// 		*it = "(";
-		// 		it = userArgs.insert(it + 1, sub);
-		// 	}
-		// }
 	}
-	// cout << "Here" << endl;
-	// for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
-	// 	cout << *it << endl;
-	// 	if (it->at(it->size() - 1) == ')') {
-	// 		cout << "Doing something" << endl;
-	// 		it->pop_back(); // remove appended ")"
-	// 		it = userArgs.insert(it + 1, ")"); // insert ")" directly after
-	// 	}
-	// }
-	// for (vector<string>::iterator it = userArgs.begin(); it != userArgs.end(); ++it) {
-	// 	if (*it == "(") {
-	// 		break;
-	// 	}
-	// 	else if (it->at(0) == '(') {
-	// 		// remove the '(' and insert it in vector index right before
-	// 		string sub = it->substr(1, it->size() - 1);
-	// 		*it = "(";
-	// 		it = userArgs.insert(it + 1, sub);
-	// 	}
-	// }
+	
+	// ex. If the last expression is 'ls;', then it would become 'ls'
 	if (isConnector(userArgs.at(userArgs.size() - 1))) {
-		userArgs.pop_back(); // ls; -> ls
+		userArgs.pop_back();
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
