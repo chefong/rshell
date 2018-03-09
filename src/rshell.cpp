@@ -57,7 +57,7 @@ void rshell::execute() {
 		while (it->find("\"") != string::npos) {
 			it->erase(it->find("\""), 1);
 		}
-		if (*it == "(" || *it == ")" || *it == "[" || *it == "]") {
+		if (*it == "(" || *it == ")" || *it == "[" || *it == "]" || *it == "<" || *it == ">" || *it == ">>" || *it == "|") {
 			// cout << "1" << endl;
 			continue;
 		}
@@ -150,9 +150,9 @@ void rshell::execute() {
 		userArgs.pop_back(); // ls; -> ls
 	}
 
-	// // CHECK IF VECTOR MODIFIED CORRECTLY
-	// printStringVector(userArgs);
-	// cout << endl;
+	// CHECK IF VECTOR MODIFIED CORRECTLY
+	printStringVector(userArgs);
+	cout << endl;
 
 	if (!isBalanced(userArgs)) {
 		cout << "Parantheses not balanced" << endl;
