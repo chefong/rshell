@@ -94,6 +94,15 @@ bool Command::evaluate() {
 		}
 		
 	}
+	//handles < operator
+	else if (find(cmds.begin(), cmds.end(), "<") != vector.end()){
+
+	}
+	//handles > and >> operator
+	else if (find(cmds.begin(), cmds.end(), ">") != vector.end() || find(cmds.begin(), cmds.end(), ">>") != vector.end()){
+
+	}
+
 	else{
 	unsigned arrSize = cmds.size() + 1;
 	char * args[arrSize]; // make a char pointer array of the same size as cmds vector

@@ -290,13 +290,6 @@ Base* rshell::chooseConnector(string symbol) {
 	else if (symbol == "|") {
 		return new pipeConnect();
 	}
-	else if (symbol == "<"){
-
-	}
-	else if (symbol == ">" || symbol = ">>"){
-		
-	}
-
 	return new semicol();
 }
 
