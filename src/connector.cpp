@@ -60,3 +60,21 @@ void semicol::setLeft(Base* node) {
 void semicol::setRight(Base* node) {
 	right = node;
 }
+
+bool pipeConnect::evaluate() {      //corresponds with "|" symbol
+	// cout << "Calling PIPE evaluate" << endl;
+	
+	return true;
+}
+
+string pipeConnect::element() {
+	return "|";
+}
+
+void pipeConnect::setLeft(Base* node) {
+	left = node;
+}
+
+void pipeConnect::setRight(Base* node) {
+	right = node;
+}

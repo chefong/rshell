@@ -46,4 +46,16 @@ class semicol : public Connector {
 		void setRight(Base*);
 };
 
+class pipeConnect : public Connector {
+	private:
+		Base* left;
+		Base* right;
+	public:
+		pipeConnect() : left(0), right(0) {};
+		bool evaluate();
+		string element();
+		void setLeft(Base*);
+		void setRight(Base*);
+};
+
 #endif

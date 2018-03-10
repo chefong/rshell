@@ -1,4 +1,4 @@
-	#include <iostream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <iterator>
@@ -259,7 +259,7 @@ bool rshell::isBalanced(vector<string> v) {
 }
 
 bool rshell::isConnector(string argument) {
-	if (argument == "&&" || argument == "||" || argument == ";") {
+	if (argument == "&&" || argument == "||" || argument == ";" || argument == "|") {
 		return true;
 	}
 	return false;
@@ -287,6 +287,10 @@ Base* rshell::chooseConnector(string symbol) {
 	else if (symbol == "||") {
 		return new orConnect();
 	}
+	else if (symbol == "|") {
+		return new pipeConnect();
+	}
+
 	return new semicol();
 }
 
