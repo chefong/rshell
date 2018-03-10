@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <stack>
 #include <queue>
@@ -95,7 +96,7 @@ bool Command::evaluate() {
 		
 	}
 	//handles < operator
-	else if (find(cmds.begin(), cmds.end(), "<") != vector.end()){
+	else if (cmds.find(cmds.begin(), cmds.end(), "<") != vector.end()){
 
 	}
 	//handles > and >> operator
