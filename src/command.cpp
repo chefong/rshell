@@ -277,7 +277,7 @@ bool Command::evaluate() {
 
 					// open the file
 					// O_RDWR | O_CREAT, S_IRUSR | S_IWUSR
-					int f_descriptor = open(right.c_str(), O_RDWR | O_TRUNC);
+					int f_descriptor = open(right.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
 
 					if (f_descriptor < 0) {
 						cout << "Error opening the file" << endl;
