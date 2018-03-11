@@ -195,15 +195,7 @@ bool Command::evaluate() {
 
 	// }
 	else {
-		unsigned arrSize = cmds.size() + 1;
-		char * args[arrSize]; // make a char pointer array of the same size as cmds vector
-	    int status = 0;
-		// populate args array with commands in cmds vector
-		for (unsigned i = 0; i < arrSize - 1; ++i) {
-			args[i] = const_cast<char*>(cmds.at(i).c_str());
-		}
-		args[arrSize - 1] = NULL; // make last index NULL
-
+		int status = 0;
 		pid_t pid = fork();
 		pid_t w;
 
@@ -232,9 +224,7 @@ bool Command::evaluate() {
 
 				++count;
 				right = cmds.at(count);
-				// for (unsigned i = count; i < cmds.size(); ++i) {
-				// 	right.push_back(cmds.at(i));
-				// }
+
 				int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
 				if (f_descriptor < 0){
 					cout << "Error opening the file" << endl;
@@ -268,30 +258,34 @@ bool Command::evaluate() {
 					++count;
 					right = cmds.at(count);
 
+					cout << "Contents of left vector are: " << endl;
 					for (unsigned i = 0; i < left.size(); ++i) {
 						cout << left.at(i) << endl;
 					}
+					cout << endl;
 
-					// open the file
-					int f_descriptor = open(right.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-
-					if (f_descriptor < 0){
-						cout << "Error opening the file" <<endl;
-						return false;
-					}
-					
-					dup2(f_descriptor, STDIN_FILENO);
-					close(f_descriptor);
-
-					// same process as the original execvp
 					unsigned arrSizeIO = left.size() + 1;
 					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
-				    int status = 0;
-					// populate args array with commands in left vector
+					// populate argsIO array with commands in left vector
 					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
 						argsIO[i] = const_cast<char*>(left.at(i).c_str());
 					}
 					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
+
+					cout << "Contents of right string is: " << endl;
+					cout << right << endl;
+
+					// open the file
+					// O_RDWR | O_CREAT, S_IRUSR | S_IWUSR
+					int f_descriptor = open(right.c_str(), O_RDWR | O_TRUNC);
+
+					if (f_descriptor < 0) {
+						cout << "Error opening the file" << endl;
+						return false;
+					}
+					
+					dup2(f_descriptor, STDOUT_FILENO);
+					close(f_descriptor);
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
@@ -321,7 +315,15 @@ bool Command::evaluate() {
 					// }
 				}
 			}
-			else {
+			else { // user enters a regular command like "ls -a"
+				unsigned arrSize = cmds.size() + 1;
+				char * args[arrSize]; // make a char pointer array of the same size as cmds vector
+				// populate args array with commands in cmds vector
+				for (unsigned i = 0; i < arrSize - 1; ++i) {
+					args[i] = const_cast<char*>(cmds.at(i).c_str());
+				}
+				args[arrSize - 1] = NULL; // make last index NULL
+
 				if (execvp(*args, args) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
 		            exit(1);
