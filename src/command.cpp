@@ -248,9 +248,8 @@ bool Command::evaluate() {
 			}
 			//handles > and >> operator
 			else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()) {
-				cout << "Contains > or >>" << endl;
-
 				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
+					cout << "Contains >" << endl;
 					vector<string> left;
 					//vector<string> right;
 					string right;
@@ -273,6 +272,7 @@ bool Command::evaluate() {
 						cout << left.at(i) << endl;
 					}
 
+					// open the file
 					int f_descriptor = open(right.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
 					if (f_descriptor < 0){
@@ -280,19 +280,20 @@ bool Command::evaluate() {
 						return false;
 					}
 					
-					dup2(f_descriptor, STDOUT_FILENO);
+					dup2(f_descriptor, STDIN_FILENO);
 					close(f_descriptor);
 
-					unsigned arrSize = left.size() + 1;
-					char * args[arrSize]; // make a char pointer array of the same size as left vector
+					// same process as the original execvp
+					unsigned arrSizeIO = left.size() + 1;
+					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
 				    int status = 0;
 					// populate args array with commands in left vector
-					for (unsigned i = 0; i < arrSize - 1; ++i) {
-						args[i] = const_cast<char*>(left.at(i).c_str());
+					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
+						argsIO[i] = const_cast<char*>(left.at(i).c_str());
 					}
-					args[arrSize - 1] = NULL; // make last index NULL
+					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
-					if (execvp(*args, args) < 0) { // if execvp returns, then error
+					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 			            exit(1);
 					}
@@ -320,16 +321,7 @@ bool Command::evaluate() {
 					// }
 				}
 			}
-			else { // user enters normal command like "echo hello"
-				unsigned arrSize = cmds.size() + 1;
-				char * args[arrSize]; // make a char pointer array of the same size as cmds vector
-			    int status = 0;
-				// populate args array with commands in cmds vector
-				for (unsigned i = 0; i < arrSize - 1; ++i) {
-					args[i] = const_cast<char*>(cmds.at(i).c_str());
-				}
-				args[arrSize - 1] = NULL; // make last index NULL
-
+			else {
 				if (execvp(*args, args) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
 		            exit(1);
