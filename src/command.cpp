@@ -313,6 +313,39 @@ bool Command::evaluate() {
 					// for (unsigned i = count; i < cmds.size(); ++i) {
 					// 	right.push_back(cmds.at(i));
 					// }
+					cout << "Contents of left vector are: " << endl;
+					for (unsigned i = 0; i < left.size(); ++i) {
+						cout << left.at(i) << endl;
+					}
+					cout << endl;
+
+					unsigned arrSizeIO = left.size() + 1;
+					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
+					// populate argsIO array with commands in left vector
+					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
+						argsIO[i] = const_cast<char*>(left.at(i).c_str());
+					}
+					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
+
+					cout << "Contents of right string is: " << endl;
+					cout << right << endl;
+
+					// open the file
+					// O_RDWR | O_CREAT, S_IRUSR | S_IWUSR
+					int f_descriptor = open(right.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG);
+
+					if (f_descriptor < 0) {
+						cout << "Error opening the file" << endl;
+						return false;
+					}
+					
+					dup2(f_descriptor, STDOUT_FILENO);
+					close(f_descriptor);
+
+					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
+						cout << "*** ERROR: exec failed\n" << endl;
+			            exit(1);
+					}
 				}
 			}
 			else { // user enters a regular command like "ls -a"
