@@ -126,10 +126,10 @@ bool Command::evaluate() {
 			return false;
 		}
 
-		dup2(f_descriptor, 0);
+		dup2(f_descriptor, 1);
 		printf("hi");
 
-
+		return true;
 	}
 	//handles > and >> operator
 	else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()){
@@ -156,7 +156,20 @@ bool Command::evaluate() {
 			// for (unsigned i = count; i < cmds.size(); ++i) {
 			// 	right.push_back(cmds.at(i));
 			// }
+			int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
+			if (f_descriptor < 0){
+				cout << "Error opening the file" <<endl;
+				return false;
+			}
+			cout <<" asdf" << endl;
+			dup2(f_descriptor, STDOUT_FILENO);
+			cout << ";lkj" << endl;
+			close (f_descriptor);
+			
+			printf("hi");
+			return true;
 		}
+
 		else {
 			vector<string> left;
 			//vector<string> right;
