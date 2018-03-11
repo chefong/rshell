@@ -213,51 +213,15 @@ bool Command::evaluate() {
 		}
 		else if (pid == 0) {
 			if (find(cmds.begin(), cmds.end(), "<") != cmds.end()){
-			cout << "Contains <" << endl;
+				cout << "Contains <" << endl;
 
-			vector<string> left;
-			//vector<string> right;
-			string right;
-
-			int count = 0;
-			for (unsigned i = 0; i < cmds.size(); ++i) {
-				if (cmds.at(i) != "<") {
-					left.push_back(cmds.at(i));
-					++count;
-				}
-				else {
-					break;
-				}
-			}
-
-			++count;
-			right = cmds.at(count);
-			// for (unsigned i = count; i < cmds.size(); ++i) {
-			// 	right.push_back(cmds.at(i));
-			// }
-			int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
-			if (f_descriptor < 0){
-				cout << "Error opening the file" <<endl;
-				return false;
-			}
-
-			dup2(f_descriptor, 1);
-			printf("hi");
-
-			return true;
-		}
-		//handles > and >> operator
-		else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()){
-			cout << "Contains > or >>" << endl;
-
-			if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
 				vector<string> left;
 				//vector<string> right;
 				string right;
 
 				int count = 0;
 				for (unsigned i = 0; i < cmds.size(); ++i) {
-					if (cmds.at(i) != ">") {
+					if (cmds.at(i) != "<") {
 						left.push_back(cmds.at(i));
 						++count;
 					}
@@ -271,44 +235,105 @@ bool Command::evaluate() {
 				// for (unsigned i = count; i < cmds.size(); ++i) {
 				// 	right.push_back(cmds.at(i));
 				// }
-				int f_descriptor = open(right.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);;
+				int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
 				if (f_descriptor < 0){
-					cout << "Error opening the file" <<endl;
+					cout << "Error opening the file" << endl;
 					return false;
 				}
-				cout <<" asdf" << endl;
-				dup2(f_descriptor, STDOUT_FILENO);
-				close (f_descriptor);
-			
+
+				dup2(f_descriptor, 1);
+				printf("hi");
+
+				return true;
 			}
+			//handles > and >> operator
+			else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()) {
+				cout << "Contains > or >>" << endl;
 
-			else {
-				vector<string> left;
-				//vector<string> right;
-				string right;
+				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
+					vector<string> left;
+					//vector<string> right;
+					string right;
 
-				int count = 0;
-				for (unsigned i = 0; i < cmds.size(); ++i) {
-					if (cmds.at(i) != ">>") {
-						left.push_back(cmds.at(i));
-						++count;
+					int count = 0;
+					for (unsigned i = 0; i < cmds.size(); ++i) {
+						if (cmds.at(i) != ">") {
+							left.push_back(cmds.at(i));
+							++count;
+						}
+						else {
+							break;
+						}
 					}
-					else {
-						break;
+
+					++count;
+					right = cmds.at(count);
+
+					for (unsigned i = 0; i < left.size(); ++i) {
+						cout << left.at(i) << endl;
+					}
+
+					int f_descriptor = open(right.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+
+					if (f_descriptor < 0){
+						cout << "Error opening the file" <<endl;
+						return false;
+					}
+					
+					dup2(f_descriptor, STDOUT_FILENO);
+					close(f_descriptor);
+
+					unsigned arrSize = left.size() + 1;
+					char * args[arrSize]; // make a char pointer array of the same size as left vector
+				    int status = 0;
+					// populate args array with commands in left vector
+					for (unsigned i = 0; i < arrSize - 1; ++i) {
+						args[i] = const_cast<char*>(left.at(i).c_str());
+					}
+					args[arrSize - 1] = NULL; // make last index NULL
+
+					if (execvp(*args, args) < 0) { // if execvp returns, then error
+						cout << "*** ERROR: exec failed\n" << endl;
+			            exit(1);
 					}
 				}
+				else {
+					vector<string> left;
+					//vector<string> right;
+					string right;
 
-				++count;
-				right = cmds.at(count);
-				// for (unsigned i = count; i < cmds.size(); ++i) {
-				// 	right.push_back(cmds.at(i));
-				// }
+					int count = 0;
+					for (unsigned i = 0; i < cmds.size(); ++i) {
+						if (cmds.at(i) != ">>") {
+							left.push_back(cmds.at(i));
+							++count;
+						}
+						else {
+							break;
+						}
+					}
+
+					++count;
+					right = cmds.at(count);
+					// for (unsigned i = count; i < cmds.size(); ++i) {
+					// 	right.push_back(cmds.at(i));
+					// }
+				}
 			}
+			else { // user enters normal command like "echo hello"
+				unsigned arrSize = cmds.size() + 1;
+				char * args[arrSize]; // make a char pointer array of the same size as cmds vector
+			    int status = 0;
+				// populate args array with commands in cmds vector
+				for (unsigned i = 0; i < arrSize - 1; ++i) {
+					args[i] = const_cast<char*>(cmds.at(i).c_str());
+				}
+				args[arrSize - 1] = NULL; // make last index NULL
 
-	}
-			if (execvp(*args, args) < 0) { // if execvp returns, then error
-				cout << "*** ERROR: exec failed\n" << endl;
-	            exit(1);
+				if (execvp(*args, args) < 0) { // if execvp returns, then error
+					cout << "*** ERROR: exec failed\n" << endl;
+		            exit(1);
+				}
 			}
 		}
 		else {
