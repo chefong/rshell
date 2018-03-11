@@ -97,103 +97,103 @@ bool Command::evaluate() {
 		
 	}
 	//handles < operator
-	else if (find(cmds.begin(), cmds.end(), "<") != cmds.end()){
-		cout << "Contains <" << endl;
+	// else if (find(cmds.begin(), cmds.end(), "<") != cmds.end()){
+	// 	cout << "Contains <" << endl;
 
-		vector<string> left;
-		//vector<string> right;
-		string right;
+	// 	vector<string> left;
+	// 	//vector<string> right;
+	// 	string right;
 
-		int count = 0;
-		for (unsigned i = 0; i < cmds.size(); ++i) {
-			if (cmds.at(i) != "<") {
-				left.push_back(cmds.at(i));
-				++count;
-			}
-			else {
-				break;
-			}
-		}
+	// 	int count = 0;
+	// 	for (unsigned i = 0; i < cmds.size(); ++i) {
+	// 		if (cmds.at(i) != "<") {
+	// 			left.push_back(cmds.at(i));
+	// 			++count;
+	// 		}
+	// 		else {
+	// 			break;
+	// 		}
+	// 	}
 
-		++count;
-		right = cmds.at(count);
-		// for (unsigned i = count; i < cmds.size(); ++i) {
-		// 	right.push_back(cmds.at(i));
-		// }
-		int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
-		if (f_descriptor < 0){
-			cout << "Error opening the file" <<endl;
-			return false;
-		}
+	// 	++count;
+	// 	right = cmds.at(count);
+	// 	// for (unsigned i = count; i < cmds.size(); ++i) {
+	// 	// 	right.push_back(cmds.at(i));
+	// 	// }
+	// 	int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
+	// 	if (f_descriptor < 0){
+	// 		cout << "Error opening the file" <<endl;
+	// 		return false;
+	// 	}
 
-		dup2(f_descriptor, 1);
-		printf("hi");
+	// 	dup2(f_descriptor, 1);
+	// 	printf("hi");
 
-		return true;
-	}
-	//handles > and >> operator
-	else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()){
-		cout << "Contains > or >>" << endl;
+	// 	return true;
+	// }
+	// //handles > and >> operator
+	// else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()){
+	// 	cout << "Contains > or >>" << endl;
 
-		if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
-			vector<string> left;
-			//vector<string> right;
-			string right;
+	// 	if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
+	// 		vector<string> left;
+	// 		//vector<string> right;
+	// 		string right;
 
-			int count = 0;
-			for (unsigned i = 0; i < cmds.size(); ++i) {
-				if (cmds.at(i) != ">") {
-					left.push_back(cmds.at(i));
-					++count;
-				}
-				else {
-					break;
-				}
-			}
+	// 		int count = 0;
+	// 		for (unsigned i = 0; i < cmds.size(); ++i) {
+	// 			if (cmds.at(i) != ">") {
+	// 				left.push_back(cmds.at(i));
+	// 				++count;
+	// 			}
+	// 			else {
+	// 				break;
+	// 			}
+	// 		}
 
-			++count;
-			right = cmds.at(count);
-			// for (unsigned i = count; i < cmds.size(); ++i) {
-			// 	right.push_back(cmds.at(i));
-			// }
-			int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
-			if (f_descriptor < 0){
-				cout << "Error opening the file" <<endl;
-				return false;
-			}
-			cout <<" asdf" << endl;
-			dup2(f_descriptor, STDOUT_FILENO);
-			cout << ";lkj" << endl;
-			close (f_descriptor);
+	// 		++count;
+	// 		right = cmds.at(count);
+	// 		// for (unsigned i = count; i < cmds.size(); ++i) {
+	// 		// 	right.push_back(cmds.at(i));
+	// 		// }
+	// 		int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
+	// 		if (f_descriptor < 0){
+	// 			cout << "Error opening the file" <<endl;
+	// 			return false;
+	// 		}
+	// 		cout <<" asdf" << endl;
+	// 		dup2(f_descriptor, STDOUT_FILENO);
+	// 		cout << ";lkj" << endl;
+	// 		close (f_descriptor);
 			
-			printf("hi");
-			return true;
-		}
+	// 		printf("hi");
+	// 		return true;
+	// 	}
 
-		else {
-			vector<string> left;
-			//vector<string> right;
-			string right;
+	// 	else {
+	// 		vector<string> left;
+	// 		//vector<string> right;
+	// 		string right;
 
-			int count = 0;
-			for (unsigned i = 0; i < cmds.size(); ++i) {
-				if (cmds.at(i) != ">>") {
-					left.push_back(cmds.at(i));
-					++count;
-				}
-				else {
-					break;
-				}
-			}
+	// 		int count = 0;
+	// 		for (unsigned i = 0; i < cmds.size(); ++i) {
+	// 			if (cmds.at(i) != ">>") {
+	// 				left.push_back(cmds.at(i));
+	// 				++count;
+	// 			}
+	// 			else {
+	// 				break;
+	// 			}
+	// 		}
 
-			++count;
-			right = cmds.at(count);
-			// for (unsigned i = count; i < cmds.size(); ++i) {
-			// 	right.push_back(cmds.at(i));
-			// }
-		}
+	// 		++count;
+	// 		right = cmds.at(count);
+	// 		// for (unsigned i = count; i < cmds.size(); ++i) {
+	// 		// 	right.push_back(cmds.at(i));
+	// 		// }
+	// 	}
 
-	}
+	// }
 	else {
 		unsigned arrSize = cmds.size() + 1;
 		char * args[arrSize]; // make a char pointer array of the same size as cmds vector
@@ -212,6 +212,100 @@ bool Command::evaluate() {
 			exit(1);
 		}
 		else if (pid == 0) {
+			if (find(cmds.begin(), cmds.end(), "<") != cmds.end()){
+			cout << "Contains <" << endl;
+
+			vector<string> left;
+			//vector<string> right;
+			string right;
+
+			int count = 0;
+			for (unsigned i = 0; i < cmds.size(); ++i) {
+				if (cmds.at(i) != "<") {
+					left.push_back(cmds.at(i));
+					++count;
+				}
+				else {
+					break;
+				}
+			}
+
+			++count;
+			right = cmds.at(count);
+			// for (unsigned i = count; i < cmds.size(); ++i) {
+			// 	right.push_back(cmds.at(i));
+			// }
+			int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
+			if (f_descriptor < 0){
+				cout << "Error opening the file" <<endl;
+				return false;
+			}
+
+			dup2(f_descriptor, 1);
+			printf("hi");
+
+			return true;
+		}
+		//handles > and >> operator
+		else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()){
+			cout << "Contains > or >>" << endl;
+
+			if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
+				vector<string> left;
+				//vector<string> right;
+				string right;
+
+				int count = 0;
+				for (unsigned i = 0; i < cmds.size(); ++i) {
+					if (cmds.at(i) != ">") {
+						left.push_back(cmds.at(i));
+						++count;
+					}
+					else {
+						break;
+					}
+				}
+
+				++count;
+				right = cmds.at(count);
+				// for (unsigned i = count; i < cmds.size(); ++i) {
+				// 	right.push_back(cmds.at(i));
+				// }
+				int f_descriptor = open(right.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);;
+				if (f_descriptor < 0){
+					cout << "Error opening the file" <<endl;
+					return false;
+				}
+				cout <<" asdf" << endl;
+				dup2(f_descriptor, STDOUT_FILENO);
+				close (f_descriptor);
+			
+			}
+
+			else {
+				vector<string> left;
+				//vector<string> right;
+				string right;
+
+				int count = 0;
+				for (unsigned i = 0; i < cmds.size(); ++i) {
+					if (cmds.at(i) != ">>") {
+						left.push_back(cmds.at(i));
+						++count;
+					}
+					else {
+						break;
+					}
+				}
+
+				++count;
+				right = cmds.at(count);
+				// for (unsigned i = count; i < cmds.size(); ++i) {
+				// 	right.push_back(cmds.at(i));
+				// }
+			}
+
+	}
 			if (execvp(*args, args) < 0) { // if execvp returns, then error
 				cout << "*** ERROR: exec failed\n" << endl;
 	            exit(1);
