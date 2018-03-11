@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "command.h"
 #include "fstream" 
+#include<fcntl.h>
 
 using namespace std;
 
@@ -100,7 +101,8 @@ bool Command::evaluate() {
 		cout << "Contains <" << endl;
 
 		vector<string> left;
-		vector<string> right;
+		//vector<string> right;
+		string right;
 
 		int count = 0;
 		for (unsigned i = 0; i < cmds.size(); ++i) {
@@ -114,9 +116,20 @@ bool Command::evaluate() {
 		}
 
 		++count;
-		for (unsigned i = count; i < cmds.size(); ++i) {
-			right.push_back(cmds.at(i));
+		right = cmds.at(count);
+		// for (unsigned i = count; i < cmds.size(); ++i) {
+		// 	right.push_back(cmds.at(i));
+		// }
+		int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
+		if (f_descriptor < 0){
+			cout << "Error opening the file" <<endl;
+			return false;
 		}
+
+		dup2(f_descriptor, 0);
+		printf("hi");
+
+
 	}
 	//handles > and >> operator
 	else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()){
@@ -124,7 +137,8 @@ bool Command::evaluate() {
 
 		if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
 			vector<string> left;
-			vector<string> right;
+			//vector<string> right;
+			string right;
 
 			int count = 0;
 			for (unsigned i = 0; i < cmds.size(); ++i) {
@@ -138,13 +152,15 @@ bool Command::evaluate() {
 			}
 
 			++count;
-			for (unsigned i = count; i < cmds.size(); ++i) {
-				right.push_back(cmds.at(i));
-			}
+			right = cmds.at(count);
+			// for (unsigned i = count; i < cmds.size(); ++i) {
+			// 	right.push_back(cmds.at(i));
+			// }
 		}
 		else {
 			vector<string> left;
-			vector<string> right;
+			//vector<string> right;
+			string right;
 
 			int count = 0;
 			for (unsigned i = 0; i < cmds.size(); ++i) {
@@ -158,9 +174,10 @@ bool Command::evaluate() {
 			}
 
 			++count;
-			for (unsigned i = count; i < cmds.size(); ++i) {
-				right.push_back(cmds.at(i));
-			}
+			right = cmds.at(count);
+			// for (unsigned i = count; i < cmds.size(); ++i) {
+			// 	right.push_back(cmds.at(i));
+			// }
 		}
 
 	}
