@@ -134,8 +134,13 @@ bool Command::evaluate() {
 			cout << "Input file is: " << inputFile << endl;
 			cout << "Output file is: " << outputFile << endl;
 
+			// If both inputFile and outputFile are not empty,
+			// then both input and output redirectors are being used
 			if (!inputFile.empty() && !outputFile.empty()) {
+				// If the output redirector is ">" execute this branch
 				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
+					cout << "Contains < and >" << endl;
+
 					unsigned arrSizeIO = cmdsTemp.size() + 1;
 					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
 					// populate argsIO array with commands in left vector
@@ -163,7 +168,38 @@ bool Command::evaluate() {
 				        exit(1);
 					}
 				}
+				else { // This means the output redirector HAS to be a ">>"
+					cout << "Contains < and >>" << endl;
+
+					unsigned arrSizeIO = cmdsTemp.size() + 1;
+					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
+					// populate argsIO array with commands in left vector
+					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
+						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
+					}
+					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
+
+					int in_descriptor = open(inputFile.c_str(), O_RDONLY);
+					int out_descriptor = open(outputFile.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG);
+
+					if (in_descriptor < 0 || out_descriptor < 0) {
+						cout << "Error opening the file" << endl;
+						return false;
+					}
+
+					dup2(in_descriptor, STDIN_FILENO);
+					dup2(out_descriptor, STDOUT_FILENO);
+
+					close(in_descriptor);
+					close(out_descriptor);
+
+					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
+						cout << "*** ERROR: exec failed\n" << endl;
+				        exit(1);
+					}
+				}
 			}
+			// 
 			else if (!inputFile.empty()) {
 				cout << "Contains <" << endl;
 
@@ -251,7 +287,7 @@ bool Command::evaluate() {
 					}
 				}
 			}
-			else { // user enters a regular command like "ls -a"
+			else { // user enters a regular command without any redirectors
 				unsigned arrSize = cmds.size() + 1;
 				char * args[arrSize]; // make a char pointer array of the same size as cmds vector
 				// populate args array with commands in cmds vector
