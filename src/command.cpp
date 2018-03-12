@@ -114,6 +114,9 @@ bool Command::evaluate() {
 				if (!isRedirector(cmds.at(i))) {
 					cmdsTemp.push_back(cmds.at(i));
 				}
+				else {
+					break;
+				}
 			}
 
 			// At the end of the loop, inputFile = "scores" and outputFile = "out"
@@ -128,44 +131,51 @@ bool Command::evaluate() {
 				}
 			}
 
-			if (find(cmds.begin(), cmds.end(), "<") != cmds.end()){
-				cout << "Contains <" << endl;
+			cout << "Input file is: " << inputFile << endl;
+			cout << "Output file is: " << outputFile << endl;
 
-				vector<string> left;
-				string right;
-
-				int count = 0;
-				for (unsigned i = 0; i < cmds.size(); ++i) {
-					if (cmds.at(i) != "<") {
-						left.push_back(cmds.at(i));
-						++count;
+			if (!inputFile.empty() && !outputFile.empty()) {
+				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
+					unsigned arrSizeIO = cmdsTemp.size() + 1;
+					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
+					// populate argsIO array with commands in left vector
+					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
+						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
 					}
-					else {
-						break;
+					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
+
+					int in_descriptor = open(inputFile.c_str(), O_RDONLY);
+					int out_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
+
+					if (in_descriptor < 0 || out_descriptor < 0) {
+						cout << "Error opening the file" << endl;
+						return false;
+					}
+
+					dup2(in_descriptor, STDIN_FILENO);
+					dup2(out_descriptor, STDOUT_FILENO);
+
+					close(in_descriptor);
+					close(out_descriptor);
+
+					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
+						cout << "*** ERROR: exec failed\n" << endl;
+				        exit(1);
 					}
 				}
+			}
+			else if (!inputFile.empty()) {
+				cout << "Contains <" << endl;
 
-				++count;
-				right = cmds.at(count);
-
-				cout << "Contents of left vector are: " << endl;
-					for (unsigned i = 0; i < left.size(); ++i) {
-						cout << left.at(i) << endl;
-					}
-				cout << endl;
-
-				cout << "Contents of right string is: " << endl;
-				cout << right << endl;
-
-				unsigned arrSizeIO = left.size() + 1;
+				unsigned arrSizeIO = cmdsTemp.size() + 1;
 				char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
 				// populate argsIO array with commands in left vector
 				for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-					argsIO[i] = const_cast<char*>(left.at(i).c_str());
+					argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
 				}
 				argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
-				int f_descriptor = open(right.c_str(), O_RDONLY);
+				int f_descriptor = open(inputFile.c_str(), O_RDONLY);
 				if (f_descriptor < 0) {
 						cout << "Error opening the file" << endl;
 						return false;
@@ -180,46 +190,25 @@ bool Command::evaluate() {
 				}
 			}
 			//handles > and >> operator
-			else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()) {
+			else if (!outputFile.empty()) {
 				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
+
 					cout << "Contains >" << endl;
-					vector<string> left;
-					//vector<string> right;
-					string right;
 
-					int count = 0;
-					for (unsigned i = 0; i < cmds.size(); ++i) {
-						if (cmds.at(i) != ">") {
-							left.push_back(cmds.at(i));
-							++count;
-						}
-						else {
-							break;
-						}
+					for (unsigned i = 0; i < cmdsTemp.size(); ++i) {
+						cout << cmdsTemp.at(i) << endl;
 					}
 
-					++count;
-					right = cmds.at(count);
-
-					cout << "Contents of left vector are: " << endl;
-					for (unsigned i = 0; i < left.size(); ++i) {
-						cout << left.at(i) << endl;
-					}
-					cout << endl;
-
-					unsigned arrSizeIO = left.size() + 1;
+					unsigned arrSizeIO = cmdsTemp.size() + 1;
 					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
 					// populate argsIO array with commands in left vector
 					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-						argsIO[i] = const_cast<char*>(left.at(i).c_str());
+						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
 					}
 					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
-					cout << "Contents of right string is: " << endl;
-					cout << right << endl;
-
 					// open the file
-					int f_descriptor = open(right.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
+					int f_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
 					if (f_descriptor < 0) {
 						cout << "Error opening the file" << endl;
 						return false;
@@ -234,46 +223,19 @@ bool Command::evaluate() {
 					}
 				}
 				else {
-					vector<string> left;
-					//vector<string> right;
-					string right;
+					cout << "Contains >>" << endl;
 
-					int count = 0;
-					for (unsigned i = 0; i < cmds.size(); ++i) {
-						if (cmds.at(i) != ">>") {
-							left.push_back(cmds.at(i));
-							++count;
-						}
-						else {
-							break;
-						}
-					}
-
-					++count;
-					right = cmds.at(count);
-					// for (unsigned i = count; i < cmds.size(); ++i) {
-					// 	right.push_back(cmds.at(i));
-					// }
-					cout << "Contents of left vector are: " << endl;
-					for (unsigned i = 0; i < left.size(); ++i) {
-						cout << left.at(i) << endl;
-					}
-					cout << endl;
-
-					unsigned arrSizeIO = left.size() + 1;
+					unsigned arrSizeIO = cmdsTemp.size() + 1;
 					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
 					// populate argsIO array with commands in left vector
 					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-						argsIO[i] = const_cast<char*>(left.at(i).c_str());
+						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
 					}
 					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
-					cout << "Contents of right string is: " << endl;
-					cout << right << endl;
-
 					// open the file
 					// O_RDWR | O_CREAT, S_IRUSR | S_IWUSR
-					int f_descriptor = open(right.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG);
+					int f_descriptor = open(outputFile.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG);
 
 					if (f_descriptor < 0) {
 						cout << "Error opening the file" << endl;
@@ -332,7 +294,7 @@ string Command::element() {
 void Command::setLeft(Base* node) {}
 void Command::setRight(Base* node) {}
 
-void Command::isRedirector(string input){
+bool Command::isRedirector(string input){
 	if (input == "<" || input == ">" || input == ">>"){
 		return true;
 	}

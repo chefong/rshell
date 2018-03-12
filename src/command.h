@@ -20,7 +20,7 @@ class Command: public Base {
 		string element();
 		void setLeft(Base*);
 		void setRight(Base*);
-		void isRedirector(string);
+		bool isRedirector(string);
 		void setInputFile(string);
 		void setOutputFile(string);
 };
