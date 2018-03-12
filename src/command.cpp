@@ -96,104 +96,6 @@ bool Command::evaluate() {
 		}
 		
 	}
-	//handles < operator
-	// else if (find(cmds.begin(), cmds.end(), "<") != cmds.end()){
-	// 	cout << "Contains <" << endl;
-
-	// 	vector<string> left;
-	// 	//vector<string> right;
-	// 	string right;
-
-	// 	int count = 0;
-	// 	for (unsigned i = 0; i < cmds.size(); ++i) {
-	// 		if (cmds.at(i) != "<") {
-	// 			left.push_back(cmds.at(i));
-	// 			++count;
-	// 		}
-	// 		else {
-	// 			break;
-	// 		}
-	// 	}
-
-	// 	++count;
-	// 	right = cmds.at(count);
-	// 	// for (unsigned i = count; i < cmds.size(); ++i) {
-	// 	// 	right.push_back(cmds.at(i));
-	// 	// }
-	// 	int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
-	// 	if (f_descriptor < 0){
-	// 		cout << "Error opening the file" <<endl;
-	// 		return false;
-	// 	}
-
-	// 	dup2(f_descriptor, 1);
-	// 	printf("hi");
-
-	// 	return true;
-	// }
-	// //handles > and >> operator
-	// else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()){
-	// 	cout << "Contains > or >>" << endl;
-
-	// 	if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
-	// 		vector<string> left;
-	// 		//vector<string> right;
-	// 		string right;
-
-	// 		int count = 0;
-	// 		for (unsigned i = 0; i < cmds.size(); ++i) {
-	// 			if (cmds.at(i) != ">") {
-	// 				left.push_back(cmds.at(i));
-	// 				++count;
-	// 			}
-	// 			else {
-	// 				break;
-	// 			}
-	// 		}
-
-	// 		++count;
-	// 		right = cmds.at(count);
-	// 		// for (unsigned i = count; i < cmds.size(); ++i) {
-	// 		// 	right.push_back(cmds.at(i));
-	// 		// }
-	// 		int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
-	// 		if (f_descriptor < 0){
-	// 			cout << "Error opening the file" <<endl;
-	// 			return false;
-	// 		}
-	// 		cout <<" asdf" << endl;
-	// 		dup2(f_descriptor, STDOUT_FILENO);
-	// 		cout << ";lkj" << endl;
-	// 		close (f_descriptor);
-			
-	// 		printf("hi");
-	// 		return true;
-	// 	}
-
-	// 	else {
-	// 		vector<string> left;
-	// 		//vector<string> right;
-	// 		string right;
-
-	// 		int count = 0;
-	// 		for (unsigned i = 0; i < cmds.size(); ++i) {
-	// 			if (cmds.at(i) != ">>") {
-	// 				left.push_back(cmds.at(i));
-	// 				++count;
-	// 			}
-	// 			else {
-	// 				break;
-	// 			}
-	// 		}
-
-	// 		++count;
-	// 		right = cmds.at(count);
-	// 		// for (unsigned i = count; i < cmds.size(); ++i) {
-	// 		// 	right.push_back(cmds.at(i));
-	// 		// }
-	// 	}
-
-	// }
 	else {
 		int status = 0;
 		pid_t pid = fork();
@@ -204,6 +106,28 @@ bool Command::evaluate() {
 			exit(1);
 		}
 		else if (pid == 0) {
+			// ex. user enters "wc -l < scores >> out"
+			// Then, cmds vector contains ["wc", "<", "scores", ">>", "out"]
+			// At the end of the following loop, cmdsTemp would contain ["wc", "-l"]
+			vector<string> cmdsTemp;
+			for (unsigned i = 0; i < cmds.size(); ++i) {
+				if (!isRedirector(cmds.at(i))) {
+					cmdsTemp.push_back(cmds.at(i));
+				}
+			}
+
+			// At the end of the loop, inputFile = "scores" and outputFile = "out"
+			for (unsigned i = 0; i < cmds.size(); ++i) {
+				if (isRedirector(cmds.at(i))) {
+					if (cmds.at(i) == "<") {
+						setInputFile(cmds.at(i + 1));
+					}
+					else if (cmds.at(i) == ">" || cmds.at(i) == ">>") {
+						setOutputFile(cmds.at(i + 1));
+					}
+				}
+			}
+
 			if (find(cmds.begin(), cmds.end(), "<") != cmds.end()){
 				cout << "Contains <" << endl;
 
