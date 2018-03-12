@@ -11,6 +11,8 @@ class Command: public Base {
 	private:
 		string name;
 		vector<string> cmds;
+		string inputFile;
+		string outputFile;
 	public:
 		Command():Base() {};
 		Command(vector<string>);
@@ -18,6 +20,8 @@ class Command: public Base {
 		string element();
 		void setLeft(Base*);
 		void setRight(Base*);
+		void setInputFile(string);
+		void setOutputFile(string);
 };
 
 #endif

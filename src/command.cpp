@@ -407,3 +407,18 @@ string Command::element() {
 
 void Command::setLeft(Base* node) {}
 void Command::setRight(Base* node) {}
+
+void Command::isRedirector(string input){
+	if (input == "<" || input == ">" || input == ">>"){
+		return true;
+	}
+	return false;
+}
+
+void Command::setInputFile(string file){
+	inputFile = file;
+}
+
+void Command::setOutputFile(string file){
+	outputFile = file;
+}
