@@ -208,7 +208,6 @@ bool Command::evaluate() {
 				cout << "Contains <" << endl;
 
 				vector<string> left;
-				//vector<string> right;
 				string right;
 
 				int count = 0;
@@ -231,37 +230,25 @@ bool Command::evaluate() {
 					}
 				cout << endl;
 
-
 				cout << "Contents of right string is: " << endl;
 				cout << right << endl;
 
-				ifstream inputfile;
-				inputfile.open(right.c_str(), ios::in);
-				string linecontents = "";
-				string filecontents = "";
-				if (inputfile){
-					while(!inputfile.eof()){
-						inputfile >> linecontents;
-						cout << "contents of the line are: " <<linecontents << endl;
-						filecontents += linecontents + "\n";
-					}
-					inputfile.close();
-				}
-				else{
-					cout << "unable to open file" << endl;
-					exit(1);
-				}
-				cout << "Contents of the file are: " << endl;
-				cout << filecontents << endl;
-
-				unsigned arrSizeIO = left.size() + 2;
+				unsigned arrSizeIO = left.size() + 1;
 				char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
-					// populate argsIO array with commands in left vector
-				for (unsigned i = 0; i < arrSizeIO - 2; ++i) {
+				// populate argsIO array with commands in left vector
+				for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
 					argsIO[i] = const_cast<char*>(left.at(i).c_str());
 				}
-				argsIO[arrSizeIO-2] = const_cast<char*>(filecontents.c_str());
 				argsIO[arrSizeIO - 1] = NULL; // make last index NULL
+
+				int f_descriptor = open(right.c_str(), O_RDONLY);
+				if (f_descriptor < 0) {
+						cout << "Error opening the file" << endl;
+						return false;
+					}
+
+				dup2(f_descriptor, STDIN_FILENO);
+				close(f_descriptor);
 
 				if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
@@ -308,9 +295,7 @@ bool Command::evaluate() {
 					cout << right << endl;
 
 					// open the file
-					// O_RDWR | O_CREAT, S_IRUSR | S_IWUSR
 					int f_descriptor = open(right.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
-
 					if (f_descriptor < 0) {
 						cout << "Error opening the file" << endl;
 						return false;
