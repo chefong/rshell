@@ -225,16 +225,48 @@ bool Command::evaluate() {
 				++count;
 				right = cmds.at(count);
 
-				int f_descriptor = open(right.c_str(), O_WRONLY | O_APPEND);
-				if (f_descriptor < 0){
-					cout << "Error opening the file" << endl;
-					return false;
+				cout << "Contents of left vector are: " << endl;
+					for (unsigned i = 0; i < left.size(); ++i) {
+						cout << left.at(i) << endl;
+					}
+				cout << endl;
+
+
+				cout << "Contents of right string is: " << endl;
+				cout << right << endl;
+
+				ifstream inputfile;
+				inputfile.open(right.c_str(), ios::in);
+				string linecontents = "";
+				string filecontents = "";
+				if (inputfile){
+					while(!inputfile.eof()){
+						inputfile >> linecontents;
+						cout << "contents of the line are: " <<linecontents << endl;
+						filecontents += linecontents + "\n";
+					}
+					inputfile.close();
 				}
+				else{
+					cout << "unable to open file" << endl;
+					exit(1);
+				}
+				cout << "Contents of the file are: " << endl;
+				cout << filecontents << endl;
 
-				dup2(f_descriptor, 1);
-				printf("hi");
+				unsigned arrSizeIO = left.size() + 2;
+				char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
+					// populate argsIO array with commands in left vector
+				for (unsigned i = 0; i < arrSizeIO - 2; ++i) {
+					argsIO[i] = const_cast<char*>(left.at(i).c_str());
+				}
+				argsIO[arrSizeIO-2] = const_cast<char*>(filecontents.c_str());
+				argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
-				return true;
+				if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
+					cout << "*** ERROR: exec failed\n" << endl;
+			        exit(1);
+				}
 			}
 			//handles > and >> operator
 			else if (find(cmds.begin(), cmds.end(), ">") != cmds.end() || find(cmds.begin(), cmds.end(), ">>") != cmds.end()) {
