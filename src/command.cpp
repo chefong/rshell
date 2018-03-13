@@ -16,12 +16,17 @@
 
 using namespace std;
 
+// Constructor for filling in cmds vector once instantiated
 Command::Command(vector<string> v) {
 	for (unsigned i = 0; i < v.size(); ++i) {
 		cmds.push_back(v.at(i));
 	}
 }
 
+// Handles the evaluation of the user-entered commands
+// including normal shell commands w/ or w/o precedence,
+// testing of the existence of files/directories, input 
+// and output redirections, and piping.
 bool Command::evaluate(int inPipe, int outPipe) {
 	// cout << "Running COMMAND evaluate" << endl;
 	if (cmds.at(0) == "exit") {
@@ -348,6 +353,8 @@ bool Command::evaluate(int inPipe, int outPipe) {
 }
 
 
+// Returns the contents of the cmds vector in
+// the form of a string
 string Command::element() {
 	string total;
 	for (unsigned i = 0; i < cmds.size() - 1; ++i) {
@@ -357,9 +364,11 @@ string Command::element() {
 	return total;
 }
 
+// GHOST FUNCTIONS
 void Command::setLeft(Base* node) {}
 void Command::setRight(Base* node) {}
 
+// Checks if passed in string is a redirector
 bool Command::isRedirector(string input){
 	if (input == "<" || input == ">" || input == ">>"){
 		return true;
@@ -367,10 +376,12 @@ bool Command::isRedirector(string input){
 	return false;
 }
 
+// Setter function for inputFile
 void Command::setInputFile(string file){
 	inputFile = file;
 }
 
+// Setter function for outputFile
 void Command::setOutputFile(string file){
 	outputFile = file;
 }
