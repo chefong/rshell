@@ -210,7 +210,7 @@ void rshell::execute() {
 	// cout << root->getRight()->element() << endl;
 
 	// cout << endl;
-	if (root->evaluate()) {
+	if (root->evaluate(0, 1)) {
 		//cout << "Success" << endl;
 	}
 

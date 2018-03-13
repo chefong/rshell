@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include "command.h"
 #include "fstream" 
-#include<fcntl.h>
+#include <fcntl.h>
 
 using namespace std;
 
@@ -22,7 +22,7 @@ Command::Command(vector<string> v) {
 	}
 }
 
-bool Command::evaluate() {
+bool Command::evaluate(int in, int out) {
 	// cout << "Running COMMAND evaluate" << endl;
 	if (cmds.at(0) == "exit") {
 		exit(0);
@@ -134,6 +134,14 @@ bool Command::evaluate() {
 			cout << "Input file is: " << inputFile << endl;
 			cout << "Output file is: " << outputFile << endl;
 
+			unsigned arrSizeIO = cmdsTemp.size() + 1;
+			char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
+			// populate argsIO array with commands in left vector
+			for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
+				argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
+			}
+			argsIO[arrSizeIO - 1] = NULL; // make last index NULL
+
 			// If both inputFile and outputFile are not empty,
 			// then both input and output redirectors are being used
 			if (!inputFile.empty() && !outputFile.empty()) {
@@ -141,13 +149,6 @@ bool Command::evaluate() {
 				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
 					cout << "Contains < and >" << endl;
 
-					unsigned arrSizeIO = cmdsTemp.size() + 1;
-					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
-					// populate argsIO array with commands in left vector
-					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
-					}
-					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
 					int in_descriptor = open(inputFile.c_str(), O_RDONLY);
 					int out_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
@@ -163,6 +164,16 @@ bool Command::evaluate() {
 					close(in_descriptor);
 					close(out_descriptor);
 
+					dup2(in, 0);
+					dup2(out, 1);
+					
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
+
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 				        exit(1);
@@ -170,14 +181,6 @@ bool Command::evaluate() {
 				}
 				else { // This means the output redirector HAS to be a ">>"
 					cout << "Contains < and >>" << endl;
-
-					unsigned arrSizeIO = cmdsTemp.size() + 1;
-					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
-					// populate argsIO array with commands in left vector
-					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
-					}
-					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
 					int in_descriptor = open(inputFile.c_str(), O_RDONLY);
 					int out_descriptor = open(outputFile.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG);
@@ -193,6 +196,16 @@ bool Command::evaluate() {
 					close(in_descriptor);
 					close(out_descriptor);
 
+					dup2(in, 0);
+					dup2(out, 1);
+
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
+
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 				        exit(1);
@@ -203,14 +216,6 @@ bool Command::evaluate() {
 			else if (!inputFile.empty()) {
 				cout << "Contains <" << endl;
 
-				unsigned arrSizeIO = cmdsTemp.size() + 1;
-				char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
-				// populate argsIO array with commands in left vector
-				for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-					argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
-				}
-				argsIO[arrSizeIO - 1] = NULL; // make last index NULL
-
 				int f_descriptor = open(inputFile.c_str(), O_RDONLY);
 				if (f_descriptor < 0) {
 						cout << "Error opening the file" << endl;
@@ -219,6 +224,16 @@ bool Command::evaluate() {
 
 				dup2(f_descriptor, STDIN_FILENO);
 				close(f_descriptor);
+
+				dup2(in, 0);
+				dup2(out, 1);
+
+				if (in != 0) {
+					close(in);
+				}
+				else if (out != 1) {
+					close(out);
+				}	
 
 				if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
@@ -235,13 +250,6 @@ bool Command::evaluate() {
 						cout << cmdsTemp.at(i) << endl;
 					}
 
-					unsigned arrSizeIO = cmdsTemp.size() + 1;
-					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
-					// populate argsIO array with commands in left vector
-					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
-					}
-					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
 					// open the file
 					int f_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
@@ -253,6 +261,16 @@ bool Command::evaluate() {
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
 
+					dup2(in, 0);
+					dup2(out, 1);
+
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
+
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 			            exit(1);
@@ -260,14 +278,6 @@ bool Command::evaluate() {
 				}
 				else {
 					cout << "Contains >>" << endl;
-
-					unsigned arrSizeIO = cmdsTemp.size() + 1;
-					char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
-					// populate argsIO array with commands in left vector
-					for (unsigned i = 0; i < arrSizeIO - 1; ++i) {
-						argsIO[i] = const_cast<char*>(cmdsTemp.at(i).c_str());
-					}
-					argsIO[arrSizeIO - 1] = NULL; // make last index NULL
 
 					// open the file
 					// O_RDWR | O_CREAT, S_IRUSR | S_IWUSR
@@ -280,6 +290,16 @@ bool Command::evaluate() {
 					
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
+
+					dup2(in, 0);
+					dup2(out, 1);
+
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
@@ -295,6 +315,16 @@ bool Command::evaluate() {
 					args[i] = const_cast<char*>(cmds.at(i).c_str());
 				}
 				args[arrSize - 1] = NULL; // make last index NULL
+
+				dup2(in, 0);
+				dup2(out, 1);
+
+				if (in != 0) {
+					close(in);
+				}
+				else if (out != 1) {
+					close(out);
+				}
 
 				if (execvp(*args, args) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;

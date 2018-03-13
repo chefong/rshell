@@ -10,7 +10,7 @@ class Base {
 		Base* right;
 	public:
 		Base() : left(0), right(0) {};
-		virtual bool evaluate() = 0;
+		virtual bool evaluate(int, int) = 0;
 		virtual string element() = 0;
 		Base* getLeft() {
 			return left;

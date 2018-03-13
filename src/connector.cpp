@@ -1,11 +1,12 @@
 #include <iostream>
+#include <unistd.h>
 #include "connector.h"
 using namespace std;
 
-bool andConnect::evaluate() {     //corresponds with "&&" symbol 
+bool andConnect::evaluate(int in, int out) {     //corresponds with "&&" symbol 
 	// cout << "calling AND evaluate" << endl;
-	if (left->evaluate()) {
-		return right->evaluate();
+	if (left->evaluate(0, 1)) {
+		return right->evaluate(0, 1);
 	}
 	return false;
 }
@@ -22,10 +23,10 @@ void andConnect::setRight(Base* node) {
 	right = node;
 }
 
-bool orConnect::evaluate() {     //corresponds with "||" symbol
+bool orConnect::evaluate(int in, int out) {     //corresponds with "||" symbol
 	// cout << "calling OR evaluate" << endl;
-	if (!left->evaluate()) {
-		return right->evaluate();
+	if (!left->evaluate(0, 1)) {
+		return right->evaluate(0, 1);
 	}
 	return true;
 }
@@ -42,11 +43,11 @@ void orConnect::setRight(Base* node) {
 	right = node;
 }
 
-bool semicol::evaluate() {      //corresponds with ";" symbol
+bool semicol::evaluate(int in, int out) {      //corresponds with ";" symbol
 	// cout << "Calling SEMICOL evaluate" << endl;
-	left->evaluate();
+	left->evaluate(0, 1);
 	// cout << right->element() << endl;
-	return right->evaluate();
+	return right->evaluate(0, 1);
 }
 
 string semicol::element() {
@@ -61,9 +62,16 @@ void semicol::setRight(Base* node) {
 	right = node;
 }
 
-bool pipeConnect::evaluate() {      //corresponds with "|" symbol
-	// cout << "Calling PIPE evaluate" << endl;
-	
+bool pipeConnect::evaluate(int in, int out) {      //corresponds with "|" symbol
+	int fds[2];
+	pipe(fds);
+
+	left->evaluate(in, fds[1]);
+	right->evaluate(fds[0], out);
+
+	close(fds[0]);
+	close(fds[0]);
+
 	return true;
 }
 
