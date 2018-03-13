@@ -22,7 +22,7 @@ Command::Command(vector<string> v) {
 	}
 }
 
-bool Command::evaluate(int in, int out) {
+bool Command::evaluate(int inPipe, int outPipe) {
 	// cout << "Running COMMAND evaluate" << endl;
 	if (cmds.at(0) == "exit") {
 		exit(0);
@@ -164,14 +164,14 @@ bool Command::evaluate(int in, int out) {
 					close(in_descriptor);
 					close(out_descriptor);
 
-					dup2(in, 0);
-					dup2(out, 1);
+					dup2(inPipe, 0);
+					dup2(outPipe, 1);
 					
 					if (in != 0) {
-						close(in);
+						close(inPipe);
 					}
 					else if (out != 1) {
-						close(out);
+						close(outPipe);
 					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
@@ -196,14 +196,14 @@ bool Command::evaluate(int in, int out) {
 					close(in_descriptor);
 					close(out_descriptor);
 
-					dup2(in, 0);
-					dup2(out, 1);
+					dup2(inPipe, 0);
+					dup2(outPipe, 1);
 
 					if (in != 0) {
-						close(in);
+						close(inPipe);
 					}
 					else if (out != 1) {
-						close(out);
+						close(outPipe);
 					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error

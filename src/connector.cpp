@@ -3,7 +3,7 @@
 #include "connector.h"
 using namespace std;
 
-bool andConnect::evaluate(int in, int out) {     //corresponds with "&&" symbol 
+bool andConnect::evaluate(int in, int out) { //corresponds with "&&" symbol 
 	// cout << "calling AND evaluate" << endl;
 	if (left->evaluate(0, 1)) {
 		return right->evaluate(0, 1);
@@ -23,7 +23,7 @@ void andConnect::setRight(Base* node) {
 	right = node;
 }
 
-bool orConnect::evaluate(int in, int out) {     //corresponds with "||" symbol
+bool orConnect::evaluate(int in, int out) { //corresponds with "||" symbol
 	// cout << "calling OR evaluate" << endl;
 	if (!left->evaluate(0, 1)) {
 		return right->evaluate(0, 1);
@@ -43,7 +43,7 @@ void orConnect::setRight(Base* node) {
 	right = node;
 }
 
-bool semicol::evaluate(int in, int out) {      //corresponds with ";" symbol
+bool semicol::evaluate(int in, int out) { //corresponds with ";" symbol
 	// cout << "Calling SEMICOL evaluate" << endl;
 	left->evaluate(0, 1);
 	// cout << right->element() << endl;
@@ -62,7 +62,7 @@ void semicol::setRight(Base* node) {
 	right = node;
 }
 
-bool pipeConnect::evaluate(int in, int out) {      //corresponds with "|" symbol
+bool pipeConnect::evaluate(int in, int out) { //corresponds with "|" symbol
 	int fds[2];
 	pipe(fds);
 
