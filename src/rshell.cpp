@@ -108,8 +108,8 @@ void rshell::execute() {
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	printStringVector(userArgs);
-	cout << endl;
+	// printStringVector(userArgs);
+	// cout << endl;
 
 	if (!isBalanced(userArgs)) {
 		cout << "Parantheses not balanced" << endl;
@@ -165,7 +165,7 @@ void rshell::execute() {
 	}
 
 	// cout << "Printing queue before last commands" << endl;
- // 	printBaseQueue(output);
+ 	// printBaseQueue(output);
 
 	// account for the last set of commands in userArgs
 	if (!isRightBracket(userArgs.at(userArgs.size() - 1))) {

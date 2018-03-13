@@ -167,10 +167,10 @@ bool Command::evaluate(int inPipe, int outPipe) {
 					dup2(inPipe, 0);
 					dup2(outPipe, 1);
 					
-					if (in != 0) {
+					if (inPipe != 0) {
 						close(inPipe);
 					}
-					else if (out != 1) {
+					else if (outPipe != 1) {
 						close(outPipe);
 					}
 
@@ -199,10 +199,10 @@ bool Command::evaluate(int inPipe, int outPipe) {
 					dup2(inPipe, 0);
 					dup2(outPipe, 1);
 
-					if (in != 0) {
+					if (inPipe != 0) {
 						close(inPipe);
 					}
-					else if (out != 1) {
+					else if (outPipe != 1) {
 						close(outPipe);
 					}
 
@@ -225,14 +225,14 @@ bool Command::evaluate(int inPipe, int outPipe) {
 				dup2(f_descriptor, STDIN_FILENO);
 				close(f_descriptor);
 
-				dup2(in, 0);
-				dup2(out, 1);
+				dup2(inPipe, 0);
+				dup2(outPipe, 1);
 
-				if (in != 0) {
-					close(in);
+				if (inPipe != 0) {
+					close(inPipe);
 				}
-				else if (out != 1) {
-					close(out);
+				else if (outPipe != 1) {
+					close(outPipe);
 				}	
 
 				if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
@@ -261,14 +261,14 @@ bool Command::evaluate(int inPipe, int outPipe) {
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
 
-					dup2(in, 0);
-					dup2(out, 1);
+					dup2(inPipe, 0);
+					dup2(outPipe, 1);
 
-					if (in != 0) {
-						close(in);
+					if (inPipe != 0) {
+						close(inPipe);
 					}
-					else if (out != 1) {
-						close(out);
+					else if (outPipe != 1) {
+						close(outPipe);
 					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
@@ -291,14 +291,14 @@ bool Command::evaluate(int inPipe, int outPipe) {
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
 
-					dup2(in, 0);
-					dup2(out, 1);
+					dup2(inPipe, 0);
+					dup2(outPipe, 1);
 
-					if (in != 0) {
-						close(in);
+					if (inPipe != 0) {
+						close(inPipe);
 					}
-					else if (out != 1) {
-						close(out);
+					else if (outPipe != 1) {
+						close(outPipe);
 					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
@@ -316,14 +316,14 @@ bool Command::evaluate(int inPipe, int outPipe) {
 				}
 				args[arrSize - 1] = NULL; // make last index NULL
 
-				dup2(in, 0);
-				dup2(out, 1);
+				dup2(inPipe, 0);
+				dup2(outPipe, 1);
 
-				if (in != 0) {
-					close(in);
+				if (inPipe != 0) {
+					close(inPipe);
 				}
-				else if (out != 1) {
-					close(out);
+				else if (outPipe != 1) {
+					close(outPipe);
 				}
 
 				if (execvp(*args, args) < 0) { // if execvp returns, then error
