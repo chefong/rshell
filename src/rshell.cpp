@@ -7,18 +7,16 @@
 #include "rshell.h"
 #include "command.h"
 
-// Function used to loop the execute function.
-// This is called in main
+// This will be the function that main will run
 void rshell::begin() {
 	bool status = true;
+
 	while (status) {
 		execute();
 	}
 }
 
-// User entered command is tokenized and parsed.
-// Then, a tree representing the commands is built.
-// Evaluate function in command is then called on the root node
+// 
 void rshell::execute() {
 	string arguments;
 	vector<string> userArgs;
@@ -112,8 +110,8 @@ void rshell::execute() {
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	// printStringVector(userArgs);
-	// cout << endl;
+	printStringVector(userArgs);
+	cout << endl;
 
 	if (!isBalanced(userArgs)) {
 		cout << "Parantheses not balanced" << endl;
@@ -169,7 +167,7 @@ void rshell::execute() {
 	}
 
 	// cout << "Printing queue before last commands" << endl;
- 	// printBaseQueue(output);
+ // 	printBaseQueue(output);
 
 	// account for the last set of commands in userArgs
 	if (!isRightBracket(userArgs.at(userArgs.size() - 1))) {
@@ -214,7 +212,7 @@ void rshell::execute() {
 	// cout << root->getRight()->element() << endl;
 
 	// cout << endl;
-	if (root->evaluate(0, 1)) {
+	if (root->evaluate()) {
 		//cout << "Success" << endl;
 	}
 
@@ -232,8 +230,6 @@ void rshell::execute() {
 	delete[] cstr;
 }
 
-// Checks if the user entered command has balanced parentheses
-// If not, then output error
 bool rshell::isBalanced(vector<string> v) {
 	stack<string> par;
 
@@ -264,7 +260,6 @@ bool rshell::isBalanced(vector<string> v) {
 	return par.empty();
 }
 
-// Checks if passed in string is a connector
 bool rshell::isConnector(string argument) {
 	if (argument == "&&" || argument == "||" || argument == ";" || argument == "|") {
 		return true;
@@ -272,7 +267,6 @@ bool rshell::isConnector(string argument) {
 	return false;
 }
 
-// Checks if passed in string is a left parentheses
 bool rshell::isLeftBracket(string argument) {
 	if (argument == "(") {
 		// cout << "Element is left bracket" << endl;
@@ -281,7 +275,6 @@ bool rshell::isLeftBracket(string argument) {
 	return false;
 }
 
-// Checks if passed in string is a right parentheses
 bool rshell::isRightBracket(string argument) {
 	if (argument == ")") {
 		return true;
@@ -289,8 +282,6 @@ bool rshell::isRightBracket(string argument) {
 	return false;
 }
 
-// A connector is returned (as a Base*) depending 
-// on the string passed in
 Base* rshell::chooseConnector(string symbol) {
 	if (symbol == "&&") {
 		return new andConnect();
@@ -304,14 +295,12 @@ Base* rshell::chooseConnector(string symbol) {
 	return new semicol();
 }
 
-// Prints the contents of a vector of strings
 void rshell::printStringVector(vector<string> v) {
 	for (unsigned i = 0; i < v.size(); ++i) {
 		cout << v.at(i) << endl;
 	}
 }
 
-// Prints the contents of a queue of Base*
 void rshell::printBaseQueue(queue<Base*> q) {
 	while (!q.empty()) {
 		cout << q.front()->element() << endl;
@@ -321,7 +310,6 @@ void rshell::printBaseQueue(queue<Base*> q) {
 	// cout << "Done printing queue" << endl;
 }
 
-// Prints the tree in preorder traversal
 void rshell::printPreorder(Base* current) {
 	if (current == 0) {
 		return;
@@ -331,7 +319,6 @@ void rshell::printPreorder(Base* current) {
 	printPreorder(current->getRight());
 }
 
-// Prints the tree in inorder traversal
 void rshell::printInorder(Base* current) {
 	if (current == 0) {
 		return;
@@ -341,7 +328,6 @@ void rshell::printInorder(Base* current) {
 	printInorder(current->getRight());
 }
 
-// Prints the tree in postorder traversal
 void rshell::printPostorder(Base* current) {
 	if (current == 0) {
 		return;

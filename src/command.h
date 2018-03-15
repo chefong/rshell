@@ -16,7 +16,7 @@ class Command: public Base {
 	public:
 		Command():Base() {};
 		Command(vector<string>);
-		bool evaluate(int, int);
+		bool evaluate();
 		string element();
 		void setLeft(Base*);
 		void setRight(Base*);

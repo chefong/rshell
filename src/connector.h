@@ -4,7 +4,7 @@
 
 class Connector : public Base {
 	public:
-		virtual bool evaluate(int, int) = 0;
+		virtual bool evaluate() = 0;
 		virtual string element() = 0;
 		virtual void setLeft(Base*) = 0;
 		virtual void setRight(Base*) = 0;
@@ -16,7 +16,7 @@ class andConnect : public Connector {
 		Base* right;
 	public:
 		andConnect() : left(0), right(0) {};
-		bool evaluate(int, int);
+		bool evaluate();
 		string element();
 		void setLeft(Base*);
 		void setRight(Base*);
@@ -28,7 +28,7 @@ class orConnect : public Connector {
 		Base* right;
 	public:
 		orConnect() : left(0), right(0) {};
-		bool evaluate(int, int);
+		bool evaluate();
 		string element();
 		void setLeft(Base*);
 		void setRight(Base*);
@@ -40,7 +40,7 @@ class semicol : public Connector {
 		Base* right;
 	public:
 		semicol() : left(0), right(0) {};
-		bool evaluate(int, int);
+		bool evaluate();
 		string element();
 		void setLeft(Base*);
 		void setRight(Base*);
@@ -52,7 +52,7 @@ class pipeConnect : public Connector {
 		Base* right;
 	public:
 		pipeConnect() : left(0), right(0) {};
-		bool evaluate(int, int);
+		bool evaluate();
 		string element();
 		void setLeft(Base*);
 		void setRight(Base*);

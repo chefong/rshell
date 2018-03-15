@@ -16,18 +16,13 @@
 
 using namespace std;
 
-// Constructor for filling in cmds vector once instantiated
 Command::Command(vector<string> v) {
 	for (unsigned i = 0; i < v.size(); ++i) {
 		cmds.push_back(v.at(i));
 	}
 }
 
-// Handles the evaluation of the user-entered commands
-// including normal shell commands w/ or w/o precedence,
-// testing of the existence of files/directories, input 
-// and output redirections, and piping.
-bool Command::evaluate(int inPipe, int outPipe) {
+bool Command::evaluate() {
 	// cout << "Running COMMAND evaluate" << endl;
 	if (cmds.at(0) == "exit") {
 		exit(0);
@@ -99,7 +94,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 				return true;
 			}
 		}
-		
 	}
 	else {
 		int status = 0;
@@ -154,7 +148,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
 					cout << "Contains < and >" << endl;
 
-
 					int in_descriptor = open(inputFile.c_str(), O_RDONLY);
 					int out_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
 
@@ -168,16 +161,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 
 					close(in_descriptor);
 					close(out_descriptor);
-
-					dup2(inPipe, 0);
-					dup2(outPipe, 1);
-					
-					if (inPipe != 0) {
-						close(inPipe);
-					}
-					else if (outPipe != 1) {
-						close(outPipe);
-					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
@@ -201,16 +184,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 					close(in_descriptor);
 					close(out_descriptor);
 
-					dup2(inPipe, 0);
-					dup2(outPipe, 1);
-
-					if (inPipe != 0) {
-						close(inPipe);
-					}
-					else if (outPipe != 1) {
-						close(outPipe);
-					}
-
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 				        exit(1);
@@ -222,6 +195,7 @@ bool Command::evaluate(int inPipe, int outPipe) {
 				cout << "Contains <" << endl;
 
 				int f_descriptor = open(inputFile.c_str(), O_RDONLY);
+
 				if (f_descriptor < 0) {
 						cout << "Error opening the file" << endl;
 						return false;
@@ -230,15 +204,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 				dup2(f_descriptor, STDIN_FILENO);
 				close(f_descriptor);
 
-				dup2(inPipe, 0);
-				dup2(outPipe, 1);
-
-				if (inPipe != 0) {
-					close(inPipe);
-				}
-				else if (outPipe != 1) {
-					close(outPipe);
-				}	
 
 				if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
@@ -255,7 +220,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 						cout << cmdsTemp.at(i) << endl;
 					}
 
-
 					// open the file
 					int f_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
 					if (f_descriptor < 0) {
@@ -266,15 +230,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
 
-					dup2(inPipe, 0);
-					dup2(outPipe, 1);
-
-					if (inPipe != 0) {
-						close(inPipe);
-					}
-					else if (outPipe != 1) {
-						close(outPipe);
-					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
@@ -296,16 +251,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
 
-					dup2(inPipe, 0);
-					dup2(outPipe, 1);
-
-					if (inPipe != 0) {
-						close(inPipe);
-					}
-					else if (outPipe != 1) {
-						close(outPipe);
-					}
-
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 			            exit(1);
@@ -321,15 +266,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 				}
 				args[arrSize - 1] = NULL; // make last index NULL
 
-				dup2(inPipe, 0);
-				dup2(outPipe, 1);
-
-				if (inPipe != 0) {
-					close(inPipe);
-				}
-				else if (outPipe != 1) {
-					close(outPipe);
-				}
 
 				if (execvp(*args, args) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
@@ -352,9 +288,6 @@ bool Command::evaluate(int inPipe, int outPipe) {
 	return false;
 }
 
-
-// Returns the contents of the cmds vector in
-// the form of a string
 string Command::element() {
 	string total;
 	for (unsigned i = 0; i < cmds.size() - 1; ++i) {
@@ -364,11 +297,9 @@ string Command::element() {
 	return total;
 }
 
-// GHOST FUNCTIONS
 void Command::setLeft(Base* node) {}
 void Command::setRight(Base* node) {}
 
-// Checks if passed in string is a redirector
 bool Command::isRedirector(string input){
 	if (input == "<" || input == ">" || input == ">>"){
 		return true;
@@ -376,12 +307,10 @@ bool Command::isRedirector(string input){
 	return false;
 }
 
-// Setter function for inputFile
 void Command::setInputFile(string file){
 	inputFile = file;
 }
 
-// Setter function for outputFile
 void Command::setOutputFile(string file){
 	outputFile = file;
 }
