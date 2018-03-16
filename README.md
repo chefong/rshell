@@ -33,9 +33,9 @@ echo a && echo b || echo c && echo d
 ```
 
 Test commands (in the form of "test" or "[ ]") allow the user to check if a file/directory exists in the current directory.
-* -e checks if the file/directory exists
-* -f checks if the file/directory exists and is a regular file
-* -d checks if the file/directory exists and is a directory
+* "-e" checks if the file/directory exists
+* "-f" checks if the file/directory exists and is a regular file
+* "-d" checks if the file/directory exists and is a directory
 ```C++
 /* prints "(True)" if "src" exists in the current directory */
 test -e src
@@ -43,6 +43,26 @@ test -e src
 /* or equivalently */
 [ -e src ]
 ```
+
+Piping and input/output redirectors are used to send input/output to/from a file or from one program to another.
+* ">" takes a command and outputs the result into a file, overwriting it
+* ">>" takes a command and appends the result into a file
+* "<" takes a file and uses it as input for a command
+* "|" sends data from one program to another
+```C++
+/* stores "hello" into the file "out.txt" */
+echo hello > out.txt
+
+/* appends "hi" to the file "out.txt" */
+echo hi >> out.txt
+
+/* counts the number of words, lines, and characters in "test.txt" */
+wc < test.txt
+
+/* counts the number of files in the current directory */
+ls | wc -l
+```
+
 
 ## Contributors/Task Distribution
 * Eric Ong
