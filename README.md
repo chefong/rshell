@@ -72,6 +72,6 @@ ls | wc -l
   * **Total: 50%**
 * Garret Lim
   * Task 2: Input redirection (For commands contain "<", 20%);
-  * Task 3: output redirection (For commands contain ">" and ">>", 20%);
-  * Task 6: construct json and README files, and git commit (that means, all the works meaned from the part "Submission" to "Coding Conventions" in assignment 4 description)(10%) 
+  * Task 3: Output redirection (For commands contain ">" and ">>", 20%);
+  * Task 6: Construct json and README files, and git commit (that means, all the works meaned from the part "Submission" to "Coding Conventions" in assignment 4 description)(10%) 
   * **Total: 50%**
