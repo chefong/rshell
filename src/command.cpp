@@ -118,6 +118,10 @@ bool Command::evaluate(int in, int out) {
 				}
 			}
 
+			if (isRedirector(cmds.at(cmds.size() - 1))) {
+				cout << "Invalid use of redirector(s)" << endl;
+				return false;
+			}
 			// At the end of the loop, inputFile = "scores" and outputFile = "out"
 			for (unsigned i = 0; i < cmds.size(); ++i) {
 				if (isRedirector(cmds.at(i))) {
@@ -126,6 +130,9 @@ bool Command::evaluate(int in, int out) {
 					}
 					else if (cmds.at(i) == ">" || cmds.at(i) == ">>") {
 						setOutputFile(cmds.at(i + 1));
+					}
+					else {
+						cout << "Invalid use of redirector(s)" << endl;
 					}
 				}
 			}
