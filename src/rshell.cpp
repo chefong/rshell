@@ -110,8 +110,8 @@ void rshell::execute() {
 	}
 
 	// CHECK IF VECTOR MODIFIED CORRECTLY
-	printStringVector(userArgs);
-	cout << endl;
+	// printStringVector(userArgs);
+	// cout << endl;
 
 	if (!isBalanced(userArgs)) {
 		cout << "Parantheses not balanced" << endl;
@@ -212,7 +212,7 @@ void rshell::execute() {
 	// cout << root->getRight()->element() << endl;
 
 	// cout << endl;
-	if (root->evaluate()) {
+	if (root->evaluate(0, 1)) {
 		//cout << "Success" << endl;
 	}
 

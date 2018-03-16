@@ -22,7 +22,7 @@ Command::Command(vector<string> v) {
 	}
 }
 
-bool Command::evaluate() {
+bool Command::evaluate(int in, int out) {
 	// cout << "Running COMMAND evaluate" << endl;
 	if (cmds.at(0) == "exit") {
 		exit(0);
@@ -130,8 +130,8 @@ bool Command::evaluate() {
 				}
 			}
 
-			cout << "Input file is: " << inputFile << endl;
-			cout << "Output file is: " << outputFile << endl;
+			// cout << "Input file is: " << inputFile << endl;
+			// cout << "Output file is: " << outputFile << endl;
 
 			unsigned arrSizeIO = cmdsTemp.size() + 1;
 			char * argsIO[arrSizeIO]; // make a char pointer array of the same size as left vector
@@ -146,7 +146,7 @@ bool Command::evaluate() {
 			if (!inputFile.empty() && !outputFile.empty()) {
 				// If the output redirector is ">" execute this branch
 				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
-					cout << "Contains < and >" << endl;
+					// cout << "Contains < and >" << endl;
 
 					int in_descriptor = open(inputFile.c_str(), O_RDONLY);
 					int out_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
@@ -162,13 +162,23 @@ bool Command::evaluate() {
 					close(in_descriptor);
 					close(out_descriptor);
 
+					dup2(in, 0);
+					dup2(out, 1);
+					
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
+
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 				        exit(1);
 					}
 				}
 				else { // This means the output redirector HAS to be a ">>"
-					cout << "Contains < and >>" << endl;
+					// cout << "Contains < and >>" << endl;
 
 					int in_descriptor = open(inputFile.c_str(), O_RDONLY);
 					int out_descriptor = open(outputFile.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG);
@@ -184,6 +194,16 @@ bool Command::evaluate() {
 					close(in_descriptor);
 					close(out_descriptor);
 
+					dup2(in, 0);
+					dup2(out, 1);
+
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
+
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
 				        exit(1);
@@ -192,7 +212,7 @@ bool Command::evaluate() {
 			}
 			// 
 			else if (!inputFile.empty()) {
-				cout << "Contains <" << endl;
+				// cout << "Contains <" << endl;
 
 				int f_descriptor = open(inputFile.c_str(), O_RDONLY);
 
@@ -204,6 +224,15 @@ bool Command::evaluate() {
 				dup2(f_descriptor, STDIN_FILENO);
 				close(f_descriptor);
 
+				dup2(in, 0);
+				dup2(out, 1);
+
+				if (in != 0) {
+					close(in);
+				}
+				else if (out != 1) {
+					close(out);
+				}	
 
 				if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
@@ -214,11 +243,11 @@ bool Command::evaluate() {
 			else if (!outputFile.empty()) {
 				if (find(cmds.begin(), cmds.end(), ">") != cmds.end()) {
 
-					cout << "Contains >" << endl;
+					// cout << "Contains >" << endl;
 
-					for (unsigned i = 0; i < cmdsTemp.size(); ++i) {
-						cout << cmdsTemp.at(i) << endl;
-					}
+					// for (unsigned i = 0; i < cmdsTemp.size(); ++i) {
+					// 	cout << cmdsTemp.at(i) << endl;
+					// }
 
 					// open the file
 					int f_descriptor = open(outputFile.c_str(), O_RDWR | O_TRUNC | O_CREAT, S_IRWXU | S_IRWXG);
@@ -230,6 +259,15 @@ bool Command::evaluate() {
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
 
+					dup2(in, 0);
+					dup2(out, 1);
+
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
@@ -237,7 +275,7 @@ bool Command::evaluate() {
 					}
 				}
 				else {
-					cout << "Contains >>" << endl;
+					// cout << "Contains >>" << endl;
 
 					// open the file
 					// O_RDWR | O_CREAT, S_IRUSR | S_IWUSR
@@ -250,6 +288,16 @@ bool Command::evaluate() {
 					
 					dup2(f_descriptor, STDOUT_FILENO);
 					close(f_descriptor);
+					
+					dup2(in, 0);
+					dup2(out, 1);
+
+					if (in != 0) {
+						close(in);
+					}
+					else if (out != 1) {
+						close(out);
+					}
 
 					if (execvp(*argsIO, argsIO) < 0) { // if execvp returns, then error
 						cout << "*** ERROR: exec failed\n" << endl;
@@ -266,6 +314,15 @@ bool Command::evaluate() {
 				}
 				args[arrSize - 1] = NULL; // make last index NULL
 
+				dup2(in, 0);
+				dup2(out, 1);
+
+				if (in != 0) {
+					close(in);
+				}
+				else if (out != 1) {
+					close(out);
+				}
 
 				if (execvp(*args, args) < 0) { // if execvp returns, then error
 					cout << "*** ERROR: exec failed\n" << endl;
