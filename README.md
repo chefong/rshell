@@ -47,11 +47,11 @@ test -e src
 ## Contributors/Task Distribution
 * Eric Ong
   * Task 1: Github Setup (10%)
-  * Task 4: The Precedence Operators (30%)
-  * Task 6: Construct json and README files, and git commit (10%)
+  * Task 4: Piping (25%)
+  * Task 5: Construct Test Scripts (enough test cases) (15%)
   * **Total: 50%**
 * Garret Lim
-  * Task 2: "Test" command 1 (for the case "test -e test/file/path") (20%)
-  * Task 3: "Test" command 2 (for the case "[ -e test/file/path ]") (15%)
-  * Task 5: Construct test scripts (enough test cases) (15%)
+  * Task 2: Input redirection (For commands contain "<", 20%);
+  * Task 3: output redirection (For commands contain ">" and ">>", 20%);
+  * Task 6: construct json and README files, and git commit (that means, all the works meaned from the part "Submission" to "Coding Conventions" in assignment 4 description)(10%) 
   * **Total: 50%**
