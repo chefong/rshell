@@ -64,6 +64,6 @@ ls | wc -l
 ```
 
 
-## Contributors/Task Distribution
+## Contributors
 * Eric Ong
 * Garret Lim
